@@ -18,6 +18,9 @@ import {
   REGISTER_USER_STARTED,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
+  LOGIN_USER_STARTED,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_FAILURE,
 } from "../constants/acion-types";
 import axios from "axios";
 
@@ -183,7 +186,6 @@ export function registerUser(user) {
       dispatch(registerUserStarted());
       const url = "/api/user/register";
       const { data } = await axios.post(url, user);
-      console.log(data)
       dispatch(registerUserSuccess(data.token));
     } catch (err) {
       dispatch(registerUserFailure(err.message));
@@ -192,9 +194,10 @@ export function registerUser(user) {
 }
 
 function registerUserStarted() {
-  return { type: REGISTER_USER_STARTED};
+  return { type: REGISTER_USER_STARTED };
 }
 function registerUserSuccess(token) {
+  localStorage.setItem('token', token)
   return {
     type: REGISTER_USER_SUCCESS,
     payload: token,
@@ -204,3 +207,29 @@ function registerUserFailure(error) {
   return { type: REGISTER_USER_FAILURE, payload: error };
 }
 
+export function loginUser(user) {
+  return async (dispatch) => {
+    try {
+      dispatch(loginUserStarted());
+      const url = "/api/user/login";
+      const { data } = await axios.post(url, user);
+      dispatch(loginUserSuccess(data.token));
+    } catch (err) {
+      dispatch(loginUserFailure(err.message));
+    }
+  };
+}
+
+function loginUserStarted() {
+  return { type: LOGIN_USER_STARTED };
+}
+function loginUserSuccess(token) {
+  localStorage.setItem('token', token)
+  return {
+    type: LOGIN_USER_SUCCESS,
+    payload: token,
+  };
+}
+function loginUserFailure(error) {
+  return { type: LOGIN_USER_FAILURE, payload: error };
+}

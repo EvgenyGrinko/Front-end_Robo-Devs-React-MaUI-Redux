@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import LogRegForm from "../LogRegForm/LogRegForm";
-import {connect} from 'react-redux';
-import {registerUser} from '../../redux/actions/index'
+import { connect } from "react-redux";
+import { registerUser, loginUser } from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -10,24 +10,23 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
     background: `no-repeat url(https://robohash.org/${Math.random()}?set=set2)`,
     backgroundPosition: "left 40% top 40%",
-    backgroundSize: '30%',
+    backgroundSize: "30%",
     display: "flex",
     justifyContent: "flex-end",
   },
-  content: {},
 }));
 
 function WelcomePage(props) {
   const [isLoginVisible, setLoginVisibility] = useState(true);
   const [loginData, setLoginData] = useState({
     email: "",
-    password: ""
-  })
+    password: "",
+  });
   const [registerData, setRegisterData] = useState({
     name: "",
     email: "",
-    password: ""
-  })
+    password: "",
+  });
 
   const classes = useStyles();
 
@@ -35,23 +34,31 @@ function WelcomePage(props) {
     setLoginVisibility(state);
   }
 
-  function handleRegisterData(data){
-    const {name, value} = data;
-    setRegisterData((prevData)=>{
-      return {...prevData, [name]: value}
-    })
+  function handleRegisterData(data) {
+    const { name, value } = data;
+    setRegisterData((prevData) => {
+      return { ...prevData, [name]: value };
+    });
   }
 
-  function handleSubmit(){
-    props.registerUser(registerData)
+  function handleRegisterSubmit() {
+    props.registerUser(registerData);
   }
 
-  function handleLoginData(data){
-    setLoginData(data)
+  function handleLoginData(data) {
+    const { name, value } = data;
+    setLoginData((prevData) => {
+      return { ...prevData, [name]: value };
+    });
   }
+
+  function handleLoginSubmit() {
+    props.loginUser(loginData);
+  }
+
   return (
     <div className={classes.container}>
-      <div className={classes.content}>
+      <div>
         {isLoginVisible ? (
           <LogRegForm
             header="Login"
@@ -59,7 +66,7 @@ function WelcomePage(props) {
             notRegistered={true}
             setLoginVisibility={handleLoginVisibility}
             onChange={handleLoginData}
-            onSubmit={handleSubmit}
+            onSubmit={handleLoginSubmit}
           />
         ) : (
           <LogRegForm
@@ -68,7 +75,7 @@ function WelcomePage(props) {
             setLoginVisibility={handleLoginVisibility}
             onChange={handleRegisterData}
             notRegistered={false}
-            onSubmit={handleSubmit}
+            onSubmit={handleRegisterSubmit}
           />
         )}
       </div>
@@ -76,6 +83,6 @@ function WelcomePage(props) {
   );
 }
 
-const mapDispatchToProps = {registerUser}
+const mapDispatchToProps = { registerUser, loginUser };
 
 export default connect(null, mapDispatchToProps)(WelcomePage);

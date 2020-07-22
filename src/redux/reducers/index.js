@@ -18,6 +18,9 @@ import {
   REGISTER_USER_STARTED,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
+  LOGIN_USER_STARTED,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_FAILURE,
 } from "../constants/acion-types";
 
 const initialState = {
@@ -28,7 +31,7 @@ const initialState = {
   foundDevelopers: [],
   currentDeveloper: {},
   isDeveloperDeleted: false,
-  token: ""
+  token: "",
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -100,19 +103,31 @@ function rootReducer(state = initialState, { type, payload }) {
       };
     case EDIT_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
-    
-      case REGISTER_USER_STARTED:
-        return { ...state, loading: true };
-      case REGISTER_USER_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          error: null,
-          token: payload
-        };
-      case REGISTER_USER_FAILURE:
-        return { ...state, loading: false, error: payload };
-  
+
+    case REGISTER_USER_STARTED:
+      return { ...state, loading: true };
+    case REGISTER_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        token: payload,
+      };
+    case REGISTER_USER_FAILURE:
+      return { ...state, loading: false, error: payload };
+
+    case LOGIN_USER_STARTED:
+      return { ...state, loading: true };
+    case LOGIN_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        token: payload,
+      };
+    case LOGIN_USER_FAILURE:
+      return { ...state, loading: false, error: payload };
+
     default:
       return state;
   }

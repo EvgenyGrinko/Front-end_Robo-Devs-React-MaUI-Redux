@@ -23,7 +23,7 @@ const SearchBar = (props) => {
     <div className={classes.search}>
       <InputBase
         placeholder="Search…"
-        fullWidth="true"
+        fullWidth={true}
         className={classes.inputInput}
         value={searchedWord}
         onChange={(event) => {

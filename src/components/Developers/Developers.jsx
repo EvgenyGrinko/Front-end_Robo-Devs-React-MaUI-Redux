@@ -38,8 +38,8 @@ const Developers = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid container spacing={2} xs={12} sm={8}>
-      <Grid item xs={12}>
+    <Grid container item={true} spacing={2} xs={12} sm={8}>
+      <Grid item={true} xs={12}>
         <div className={classes.seachAddContainer}>
           <SearchBar onSearch={onSearch} />
           <Link to="/api/add">
@@ -52,9 +52,9 @@ const Developers = (props) => {
           <CircularProgress />
         </div>
       ) : (
-        props.foundDevelopers.map((item) => {
+        props.foundDevelopers.map((item, index) => {
           return (
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid key={index} item={true} xs={12} sm={6} md={4}>
               <DevCard info={item} component="form" />
             </Grid>
           );

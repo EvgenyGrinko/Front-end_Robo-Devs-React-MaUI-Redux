@@ -9,31 +9,45 @@ import Projects from "../components/Projects/Projects";
 import AddNewDeveloperForm from "../components/AddNewDeveloperForm/AddNewDeveloperForm";
 import { Switch, Route, Redirect } from "react-router-dom";
 import WelcomePage from "../components/WelcomePage/WelcomePage";
-import {connect} from 'react-redux';
+import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
+import { connect } from "react-redux";
 
 function App(props) {
   return (
     <div className="App">
       <Switch>
-        <Route exact path="/">
+        {/* <Route exact path="/">
           {props.token ? <Redirect to="/api/developers"/> : <WelcomePage />}
+        </Route> */}
+        <Route exact path="/">
+          {props.token ? <Redirect to="/api/developers" /> : <WelcomePage />}
         </Route>
+
         <Grid container direction="column">
-          <Grid item xs={12}>
+          <Grid item={true} xs={12}>
             <NavBar />
           </Grid>
-          <Grid item container>
-            <Grid item xs={0} sm={2} />
+          <Grid item={true} container>
+            <Grid item={true} xs={false} sm={2} />
+            <PrivateRoute exact path="/api/developers" component={Developers} />
+            <PrivateRoute path="/projects" component={Projects} />
+            <PrivateRoute
+              exact
+              path="/api/developers/:id"
+              component={DevInfo}
+            />
+            <PrivateRoute
+              exact
+              path="/api/edit/:id"
+              component={EditDeveloper}
+            />
+            <PrivateRoute
+              exact
+              path="/api/add"
+              component={AddNewDeveloperForm}
+            />
 
-            <Route exact path="/api/developers">
-              <Developers />
-            </Route>
-            <Route path="/projects" component={Projects} />
-            <Route exact path="/api/developers/:id" component={DevInfo} />
-            <Route exact path="/api/edit/:id" component={EditDeveloper} />
-            <Route exact path="/api/add" component={AddNewDeveloperForm} />
-
-            <Grid item xs={0} sm={2} />
+            <Grid item={true} xs={false} sm={2} />
           </Grid>
         </Grid>
       </Switch>
@@ -41,8 +55,8 @@ function App(props) {
   );
 }
 
-function mapStateToProps(state){
-  return {token: state.token}
+function mapStateToProps(state) {
+  return { token: state.token };
 }
 
 export default connect(mapStateToProps)(App);

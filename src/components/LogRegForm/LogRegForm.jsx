@@ -8,7 +8,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
 function LogRegForm(props) {
   const classes = useStyles();
 
-  function handleChange(event){
-    const {name, value} = event.target;
-    props.onChange({name: name, value: value})
+  function handleChange(event) {
+    const { name, value } = event.target;
+    props.onChange({ name: name, value: value });
   }
 
   function handleSubmit(event) {
@@ -50,9 +50,19 @@ function LogRegForm(props) {
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container alignItems="flex-start" direction="column">
-              {props.textfields.split(" ").map((item) => {
+              {props.textfields.split(" ").map((item, id) => {
                 return (
-                  <TextField label={item} required name={item.toLowerCase()} onChange={handleChange} className={classes.inputBlock} />
+                  <TextField
+                    key={id}
+                    label={item}
+                    error={props.error}
+                    helperText={props.error ? "Please, check your entry" : null}
+                    type={item.toLowerCase()}
+                    required
+                    name={item.toLowerCase()}
+                    onChange={handleChange}
+                    className={classes.inputBlock}
+                  />
                 );
               })}
               {props.notRegistered ? (
@@ -67,8 +77,8 @@ function LogRegForm(props) {
                 >
                   Not registered yet?
                 </Typography>
-              ) : 
-              <Typography
+              ) : (
+                <Typography
                   align="left"
                   variant="caption"
                   color="textSecondary"
@@ -78,7 +88,8 @@ function LogRegForm(props) {
                   }}
                 >
                   Already registered?
-                </Typography>}
+                </Typography>
+              )}
             </Grid>
             <Button
               type="submit"
@@ -94,4 +105,8 @@ function LogRegForm(props) {
   );
 }
 
-export default LogRegForm;
+function mapStateToProps(state) {
+  return { error: state.error };
+}
+
+export default connect(mapStateToProps)(LogRegForm);

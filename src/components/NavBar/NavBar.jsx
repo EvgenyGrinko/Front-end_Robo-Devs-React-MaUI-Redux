@@ -4,7 +4,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import { Link as MaUILink } from "@material-ui/core";
 import ToysIcon from "@material-ui/icons/Toys";
 import { Link } from "react-router-dom";
 
@@ -21,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
 export default function ButtonAppBar() {
   const classes = useStyles();
 
+  function handleLogout() {
+    localStorage.removeItem("token");
+    document.location.reload(true);
+  }
+
   return (
     <AppBar position="static">
       <Toolbar className={classes.root}>
@@ -33,12 +37,14 @@ export default function ButtonAppBar() {
           <ToysIcon />
         </IconButton>
         <Link to="/api/developers">
-          <MaUILink color="inherit">Home</MaUILink>
+          <Button color="inherit">Home</Button>
         </Link>
         <Link to="/projects">
-          <MaUILink color="inherit">Projects</MaUILink>
+          <Button color="inherit">Projects</Button>
         </Link>
-        <Button color="inherit">Login</Button>
+        <Button color="inherit" onClick={handleLogout}>
+          Logout
+        </Button>
       </Toolbar>
     </AppBar>
   );
