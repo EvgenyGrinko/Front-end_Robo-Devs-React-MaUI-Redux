@@ -29,8 +29,14 @@ const useStyles = makeStyles((theme) => ({
 function LogRegForm(props) {
   const classes = useStyles();
 
+  function handleChange(event){
+    const {name, value} = event.target;
+    props.onChange({name: name, value: value})
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
+    props.onSubmit();
   }
   return (
     <div>
@@ -46,24 +52,33 @@ function LogRegForm(props) {
             <Grid container alignItems="flex-start" direction="column">
               {props.textfields.split(" ").map((item) => {
                 return (
-                  <TextField label={item} className={classes.inputBlock} />
+                  <TextField label={item} required name={item.toLowerCase()} onChange={handleChange} className={classes.inputBlock} />
                 );
               })}
               {props.notRegistered ? (
-                // <Link to="/user/register">
                 <Typography
                   align="left"
                   variant="caption"
                   color="textSecondary"
                   className={classes.notRegText}
                   onClick={() => {
-                    props.setLoginVisibility();
+                    props.setLoginVisibility(false);
                   }}
                 >
                   Not registered yet?
                 </Typography>
-              ) : // </Link>
-              null}
+              ) : 
+              <Typography
+                  align="left"
+                  variant="caption"
+                  color="textSecondary"
+                  className={classes.notRegText}
+                  onClick={() => {
+                    props.setLoginVisibility(true);
+                  }}
+                >
+                  Already registered?
+                </Typography>}
             </Grid>
             <Button
               type="submit"

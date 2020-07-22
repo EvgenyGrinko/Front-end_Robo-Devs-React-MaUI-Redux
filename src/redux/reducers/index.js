@@ -15,6 +15,9 @@ import {
   EDIT_DEVELOPER_STARTED,
   EDIT_DEVELOPER_SUCCESS,
   EDIT_DEVELOPER_FAILURE,
+  REGISTER_USER_STARTED,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_FAILURE,
 } from "../constants/acion-types";
 
 const initialState = {
@@ -25,6 +28,7 @@ const initialState = {
   foundDevelopers: [],
   currentDeveloper: {},
   isDeveloperDeleted: false,
+  token: ""
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -61,7 +65,12 @@ function rootReducer(state = initialState, { type, payload }) {
     case GET_ONE_DEVELOPER_STARTED:
       return { ...state, loading: true };
     case GET_ONE_DEVELOPER_SUCCESS:
-      return { ...state, loading: false, error: null, currentDeveloper: payload };
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        currentDeveloper: payload,
+      };
     case GET_ONE_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
     case DELETE_ONE_DEVELOPER_STARTED:
@@ -91,7 +100,19 @@ function rootReducer(state = initialState, { type, payload }) {
       };
     case EDIT_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
-
+    
+      case REGISTER_USER_STARTED:
+        return { ...state, loading: true };
+      case REGISTER_USER_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          error: null,
+          token: payload
+        };
+      case REGISTER_USER_FAILURE:
+        return { ...state, loading: false, error: payload };
+  
     default:
       return state;
   }

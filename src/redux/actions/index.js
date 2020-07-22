@@ -15,6 +15,9 @@ import {
   EDIT_DEVELOPER_STARTED,
   EDIT_DEVELOPER_SUCCESS,
   EDIT_DEVELOPER_FAILURE,
+  REGISTER_USER_STARTED,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_FAILURE,
 } from "../constants/acion-types";
 import axios from "axios";
 
@@ -155,7 +158,6 @@ export function editDeveloper(developer, id) {
       const url = "/api/developers/";
       const { data } = await axios.patch(url + id, developer);
       dispatch(editDeveloperSuccess(data.developer));
-      console.log(data)
     } catch (err) {
       dispatch(editDeveloperFailure(err.message));
     }
@@ -174,3 +176,31 @@ function editDeveloperSuccess(developer) {
 function editDeveloperFailure(error) {
   return { type: EDIT_DEVELOPER_FAILURE, payload: error };
 }
+
+export function registerUser(user) {
+  return async (dispatch) => {
+    try {
+      dispatch(registerUserStarted());
+      const url = "/api/user/register";
+      const { data } = await axios.post(url, user);
+      console.log(data)
+      dispatch(registerUserSuccess(data.token));
+    } catch (err) {
+      dispatch(registerUserFailure(err.message));
+    }
+  };
+}
+
+function registerUserStarted() {
+  return { type: REGISTER_USER_STARTED};
+}
+function registerUserSuccess(token) {
+  return {
+    type: REGISTER_USER_SUCCESS,
+    payload: token,
+  };
+}
+function registerUserFailure(error) {
+  return { type: REGISTER_USER_FAILURE, payload: error };
+}
+

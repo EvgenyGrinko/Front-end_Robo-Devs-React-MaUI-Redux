@@ -7,15 +7,16 @@ import DevInfo from "../components/DevInfo/DevInfo";
 import EditDeveloper from "../components/EditDeveloper/EditDeveloper";
 import Projects from "../components/Projects/Projects";
 import AddNewDeveloperForm from "../components/AddNewDeveloperForm/AddNewDeveloperForm";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import WelcomePage from "../components/WelcomePage/WelcomePage";
+import {connect} from 'react-redux';
 
-function App() {
+function App(props) {
   return (
     <div className="App">
       <Switch>
         <Route exact path="/">
-          <WelcomePage />
+          {props.token ? <Redirect to="/api/developers"/> : <WelcomePage />}
         </Route>
         <Grid container direction="column">
           <Grid item xs={12}>
@@ -40,7 +41,11 @@ function App() {
   );
 }
 
+function mapStateToProps(state){
+  return {token: state.token}
+}
+
+export default connect(mapStateToProps)(App);
+
 //https://jsonplaceholder.typicode.com/users
 //https://robohash.org/
-
-export default App;
