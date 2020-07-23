@@ -8,7 +8,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,8 +35,15 @@ function LogRegForm(props) {
   }
 
   function handleSubmit(event) {
+    const name = "Confirm password"
+      .toLowerCase()
+      .split(" ")
+      .reduce((res, item) => {
+        return res + item[0].toUpperCase() + item.slice(1);
+      });
     event.preventDefault();
     props.onSubmit();
+    console.log(props.errors[name]);
   }
   return (
     <div>
@@ -50,18 +57,28 @@ function LogRegForm(props) {
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container alignItems="flex-start" direction="column">
-              {props.textfields.split(" ").map((item, id) => {
+              {props.textfields.split(", ").map((item, id) => {
+                let itemName;
+                if (item === "confirm password")
+                  itemName = item.split(" ").reduce((res, item) => {
+                    return res + item[0].toUpperCase() + item.slice(1);
+                  });
+                else itemName = item;
+                const labelName = item[0].toUpperCase() + item.slice(1);
                 return (
                   <TextField
                     key={id}
-                    label={item}
-                    error={props.error}
-                    helperText={props.error ? "Please, check your entry" : null}
-                    type={item.toLowerCase()}
+                    label={labelName}
+                    // error={props.error}
+                    // helperText={props.error ? "Please, check your entry" : null}
+                    value={props.values[itemName]}
+                    type={item === "confirm password" ? "password" : itemName}
                     required
-                    name={item.toLowerCase()}
+                    name={itemName}
                     onChange={handleChange}
                     className={classes.inputBlock}
+                    error={Boolean(props.errors[itemName])}
+                    helperText={props.errors[itemName]}
                   />
                 );
               })}
@@ -105,8 +122,9 @@ function LogRegForm(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return { error: state.error };
-}
+// function mapStateToProps(state) {
+//   return { error: state.error };
+// }
 
-export default connect(mapStateToProps)(LogRegForm);
+// export default connect(mapStateToProps)(LogRegForm);
+export default LogRegForm;
