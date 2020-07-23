@@ -31,7 +31,6 @@ function EditDeveloper(props) {
     email: "",
     username: "",
     phone: "",
-    // avatar: "",
   });
 
   const [successDialogOpened, setsuccessDialogVisibility] = useState(false);
@@ -88,11 +87,6 @@ function EditDeveloper(props) {
             defaultValue={developer.email}
             onChange={handleChange}
           />
-          {/* <TextField
-            label="Avatar image"
-            name="avatar"
-            defaultValue={developer.avatar}
-          /> */}
           <Button type="submit">Submit changes</Button>
         </form>
       ) : (

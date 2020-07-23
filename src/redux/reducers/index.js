@@ -21,6 +21,10 @@ import {
   LOGIN_USER_STARTED,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
+  COMPARE_TOKEN_STARTED,
+  COMPARE_TOKEN_SUCCESS,
+  COMPARE_TOKEN_FAILURE,
+  LOGOUT_USER,
 } from "../constants/acion-types";
 
 const initialState = {
@@ -31,7 +35,7 @@ const initialState = {
   foundDevelopers: [],
   currentDeveloper: {},
   isDeveloperDeleted: false,
-  token: "",
+  isLoggedIn: false,
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -111,7 +115,7 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         loading: false,
         error: null,
-        token: payload,
+        isLoggedIn: payload,
       };
     case REGISTER_USER_FAILURE:
       return { ...state, loading: false, error: payload };
@@ -123,11 +127,25 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         loading: false,
         error: null,
-        token: payload,
+        isLoggedIn: payload,
       };
     case LOGIN_USER_FAILURE:
       return { ...state, loading: false, error: payload };
 
+    case COMPARE_TOKEN_STARTED:
+      return { ...state, loading: true };
+    case COMPARE_TOKEN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        isLoggedIn: payload,
+      };
+    case COMPARE_TOKEN_FAILURE:
+      return { ...state, loading: false, error: payload };
+
+    case LOGOUT_USER:
+      return { ...state, isLoggedIn: false };
     default:
       return state;
   }

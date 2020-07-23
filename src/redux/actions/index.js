@@ -21,6 +21,10 @@ import {
   LOGIN_USER_STARTED,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
+  COMPARE_TOKEN_STARTED,
+  COMPARE_TOKEN_SUCCESS,
+  COMPARE_TOKEN_FAILURE,
+  LOGOUT_USER,
 } from "../constants/acion-types";
 import axios from "axios";
 
@@ -58,15 +62,15 @@ function getAllDevlopersFailure(error) {
 // export function getOneDeveloper(id) {
 //   return async (dispatch) => {
 //     try {
-//       dispatch(() => ({ type: GET_ONE_DEVELOPER_STARTED }));
+//       dispatch({ type: GET_ONE_DEVELOPER_STARTED });
 //       const url = "https://jsonplaceholder.typicode.com/users/";
 //       const { data } = await axios.get(url + id);
-//       dispatch(() => ({ type: GET_ONE_DEVELOPER_SUCCESS, payload: data }));
+//       dispatch({ type: GET_ONE_DEVELOPER_SUCCESS, payload: data });
 //     } catch (err) {
-//       dispatch(() => ({
+//       dispatch({
 //         type: GET_ONE_DEVELOPER_FAILURE,
 //         payload: err.message,
-//       }));
+//       });
 //     }
 //   };
 // }
@@ -186,7 +190,7 @@ export function registerUser(user) {
       dispatch(registerUserStarted());
       const url = "/api/user/register";
       const { data } = await axios.post(url, user);
-      dispatch(registerUserSuccess(data.token));
+      dispatch(registerUserSuccess(data));
     } catch (err) {
       dispatch(registerUserFailure(err.message));
     }
@@ -196,11 +200,11 @@ export function registerUser(user) {
 function registerUserStarted() {
   return { type: REGISTER_USER_STARTED };
 }
-function registerUserSuccess(token) {
-  localStorage.setItem('token', token)
+function registerUserSuccess(data) {
+  localStorage.setItem("token", data.token);
   return {
     type: REGISTER_USER_SUCCESS,
-    payload: token,
+    payload: data.success,
   };
 }
 function registerUserFailure(error) {
@@ -213,7 +217,7 @@ export function loginUser(user) {
       dispatch(loginUserStarted());
       const url = "/api/user/login";
       const { data } = await axios.post(url, user);
-      dispatch(loginUserSuccess(data.token));
+      dispatch(loginUserSuccess(data));
     } catch (err) {
       dispatch(loginUserFailure(err.message));
     }
@@ -223,13 +227,30 @@ export function loginUser(user) {
 function loginUserStarted() {
   return { type: LOGIN_USER_STARTED };
 }
-function loginUserSuccess(token) {
-  localStorage.setItem('token', token)
+function loginUserSuccess(data) {
+  localStorage.setItem("token", data.token);
   return {
     type: LOGIN_USER_SUCCESS,
-    payload: token,
+    payload: data.success,
   };
 }
 function loginUserFailure(error) {
   return { type: LOGIN_USER_FAILURE, payload: error };
+}
+
+export function compareToken(token) {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: COMPARE_TOKEN_STARTED });
+      const url = "/api/developers/auth";
+      const { data } = await axios.post(url, token);
+      dispatch({ type: COMPARE_TOKEN_SUCCESS, payload: data.success });
+    } catch (err) {
+      dispatch({ type: COMPARE_TOKEN_FAILURE, payload: err });
+    }
+  };
+}
+
+export function logoutUser() {
+  return { type: LOGOUT_USER };
 }

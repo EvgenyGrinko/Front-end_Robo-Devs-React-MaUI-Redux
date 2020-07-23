@@ -6,6 +6,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import ToysIcon from "@material-ui/icons/Toys";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { logoutUser } from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,12 +19,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+function NavBar(props) {
   const classes = useStyles();
 
   function handleLogout() {
     localStorage.removeItem("token");
-    document.location.reload(true);
+    // document.location.reload(true);
+    props.logoutUser();
   }
 
   return (
@@ -49,3 +52,7 @@ export default function ButtonAppBar() {
     </AppBar>
   );
 }
+
+const mapDispatchToProps = { logoutUser };
+
+export default connect(null, mapDispatchToProps)(NavBar);

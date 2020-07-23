@@ -22,16 +22,22 @@ const validationSchemaLogin = yup.object().shape({
     .string()
     .email("Please enter email address in format: yourname@example.com")
     .required("Please enter email address in format: yourname@example.com"),
-  password: yup.string().required("Password is required field."),
+  password: yup
+    .string()
+    .min(6)
+    .required("Password should be at least 6 symbols long"),
 });
 
 const validationSchemaRegister = yup.object().shape({
-  name: yup.string().required("Name is required field."),
+  name: yup.string().min(2).required("Name should has at least 2 letters."),
   email: yup
     .string()
     .email("Please enter email address in format: yourname@example.com")
     .required("Please enter email address in format: yourname@example.com"),
-  password: yup.string().required("Password is required field."),
+  password: yup
+    .string()
+    .min(6)
+    .required("Password should be at least 6 symbols long"),
   confirmPassword: yup
     .string()
     .required("Confirm password is required field.")

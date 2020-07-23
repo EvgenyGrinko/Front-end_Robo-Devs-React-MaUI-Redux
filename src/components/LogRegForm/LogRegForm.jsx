@@ -35,15 +35,8 @@ function LogRegForm(props) {
   }
 
   function handleSubmit(event) {
-    const name = "Confirm password"
-      .toLowerCase()
-      .split(" ")
-      .reduce((res, item) => {
-        return res + item[0].toUpperCase() + item.slice(1);
-      });
     event.preventDefault();
     props.onSubmit();
-    console.log(props.errors[name]);
   }
   return (
     <div>

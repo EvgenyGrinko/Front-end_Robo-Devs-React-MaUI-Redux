@@ -69,8 +69,8 @@ const DevInfo = (props) => {
     <div>
       {success ? (
         <div className={classes.content}>
-          <Avatar className={classes.avatar} src={developer.avatar} />
           <Paper elevation={3} className={classes.paper}>
+
             <Link
               to={`/api/edit/${developer._id}`}
               className={classes.editButton}
@@ -79,7 +79,10 @@ const DevInfo = (props) => {
                 <EditIcon />
               </IconButton>
             </Link>
+
             <Container className={classes.textContainer}>
+                          <Avatar className={classes.avatar} src={developer.avatar} />
+
               <Typography className={classes.text}>
                 <span className={classes.textHeader}>email: </span>
                 {developer.email}
