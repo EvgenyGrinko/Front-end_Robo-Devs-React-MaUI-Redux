@@ -4,6 +4,7 @@ import LogRegForm from "../LogRegForm/LogRegForm";
 import { connect } from "react-redux";
 import { registerUser, loginUser } from "../../redux/actions/index";
 import * as yup from "yup";
+import {Redirect} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -135,7 +136,7 @@ function WelcomePage(props) {
 
   return (
     <div className={classes.container}>
-      <div>
+      {props.isLoggedIn ? (<Redirect to="/api/developers" />) : (<div>
         {isLoginVisible ? (
           <LogRegForm
             header="Login"
@@ -159,11 +160,17 @@ function WelcomePage(props) {
             errors={errors}
           />
         )}
-      </div>
+      </div>)}
+      
     </div>
   );
 }
 
-const mapDispatchToProps = { registerUser, loginUser };
 
-export default connect(null, mapDispatchToProps)(WelcomePage);
+
+const mapDispatchToProps = { registerUser, loginUser };
+function mapStateToProps (state) {
+  return {isLoggedIn : state.isLoggedIn}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WelcomePage);

@@ -38,28 +38,33 @@ const Developers = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid container item={true} spacing={2} xs={12} sm={8}>
-      <Grid item={true} xs={12}>
-        <div className={classes.seachAddContainer}>
-          <SearchBar onSearch={onSearch} />
-          <Link to="/api/add">
-            <AddButton />
-          </Link>
-        </div>
+    <Grid container>
+      <Grid item={true} xs={false} sm={2} />
+
+      <Grid container item={true} spacing={2} xs={12} sm={8}>
+        <Grid item={true} xs={12}>
+          <div className={classes.seachAddContainer}>
+            <SearchBar onSearch={onSearch} />
+            <Link to="/api/add">
+              <AddButton />
+            </Link>
+          </div>
+        </Grid>
+        {props.loading ? (
+          <div className={classes.spinnerContainer}>
+            <CircularProgress />
+          </div>
+        ) : (
+          props.foundDevelopers.map((item, index) => {
+            return (
+              <Grid key={index} item={true} xs={12} sm={6} md={4}>
+                <DevCard info={item} component="form" />
+              </Grid>
+            );
+          })
+        )}
       </Grid>
-      {props.loading ? (
-        <div className={classes.spinnerContainer}>
-          <CircularProgress />
-        </div>
-      ) : (
-        props.foundDevelopers.map((item, index) => {
-          return (
-            <Grid key={index} item={true} xs={12} sm={6} md={4}>
-              <DevCard info={item} component="form" />
-            </Grid>
-          );
-        })
-      )}
+      <Grid item={true} xs={false} sm={2} />
     </Grid>
   );
 };

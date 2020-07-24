@@ -13,29 +13,36 @@ import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
 import { connect } from "react-redux";
 import { compareToken } from "../redux/actions/index";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
+import DeveloperInfo from "../components/DeveloperInfo/DeveloperInfo";
+import { makeStyles } from "@material-ui/core/styles";
 
 function App(props) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const { isLoggedIn, isTokenCompared } = props;
+
   useEffect(() => {
     props.compareToken({ token: localStorage.getItem("token") });
-    setIsPageLoaded(true);
   }, []);
-  const { isLoggedIn } = props;
   return (
-    <div className="App">
-      {!isPageLoaded ? (
+    <div>
+      {!isTokenCompared ? (
         <LoadingSpinner />
       ) : (
-        <Switch>
-          {!isLoggedIn ? (
+        <div className="App">
+          <Switch>
             <Route exact path="/" component={WelcomePage} />
-          ) : (
             <Grid container direction="column">
               <Grid item={true} xs={12}>
                 <NavBar />
               </Grid>
-              <Grid item={true} container>
-                <Grid item={true} xs={false} sm={2} />
+
+              <Grid
+                item={true}
+                container
+                style={{ height: "70vh" }}
+                justify="center"
+                alignItems="center"
+              >
                 <PrivateRoute
                   isLoggedIn={isLoggedIn}
                   exact
@@ -48,7 +55,7 @@ function App(props) {
                   path="/projects"
                   component={Projects}
                 />
-                <PrivateRoute
+                {/* <PrivateRoute
                   isLoggedIn={isLoggedIn}
                   exact
                   path="/api/developers/:id"
@@ -59,26 +66,34 @@ function App(props) {
                   exact
                   path="/api/edit/:id"
                   component={EditDeveloper}
+                /> */}
+                <PrivateRoute
+                  isLoggedIn={isLoggedIn}
+                  exact
+                  path="/api/developers/:id"
+                  component={DeveloperInfo}
                 />
+
                 <PrivateRoute
                   isLoggedIn={isLoggedIn}
                   exact
                   path="/api/add"
                   component={AddNewDeveloperForm}
                 />
-
-                <Grid item={true} xs={false} sm={2} />
               </Grid>
             </Grid>
-          )}
-        </Switch>
+          </Switch>
+        </div>
       )}
     </div>
   );
 }
 
 const mapStateToProps = (state) => {
-  return { isLoggedIn: state.isLoggedIn };
+  return {
+    isLoggedIn: state.isLoggedIn,
+    isTokenCompared: state.isTokenCompared,
+  };
 };
 
 const mapDispatchToProps = { compareToken };

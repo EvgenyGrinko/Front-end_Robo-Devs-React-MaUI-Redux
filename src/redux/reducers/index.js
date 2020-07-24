@@ -36,6 +36,7 @@ const initialState = {
   currentDeveloper: {},
   isDeveloperDeleted: false,
   isLoggedIn: false,
+  isTokenCompared: false
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -133,16 +134,17 @@ function rootReducer(state = initialState, { type, payload }) {
       return { ...state, loading: false, error: payload };
 
     case COMPARE_TOKEN_STARTED:
-      return { ...state, loading: true };
+      return { ...state, loading: true, isTokenCompared: false };
     case COMPARE_TOKEN_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
+        isTokenCompared: true,
         isLoggedIn: payload,
       };
     case COMPARE_TOKEN_FAILURE:
-      return { ...state, loading: false, error: payload };
+      return { ...state, loading: false, isTokenCompared: true, error: payload };
 
     case LOGOUT_USER:
       return { ...state, isLoggedIn: false };
