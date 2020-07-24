@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DevCard from "../DevCard/DevCard";
 import { Grid, CircularProgress } from "@material-ui/core";
 import { connect } from "react-redux";
@@ -7,6 +7,8 @@ import SearchBar from "../SearchBar/SearchBar";
 import AddButton from "../AddButton/AddButton";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+
 
 const useStyles = makeStyles((theme) => ({
   seachAddContainer: {
@@ -27,8 +29,10 @@ const useStyles = makeStyles((theme) => ({
 const Developers = (props) => {
   useEffect(() => {
     props.getAllDevelopers();
+    setIsPageLoaded(true)
   }, []);
 
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
   function onSearch(searchedWord) {
     setTimeout(() => {
       props.setSearchedWord(searchedWord);
@@ -38,34 +42,33 @@ const Developers = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid container>
-      <Grid item={true} xs={false} sm={2} />
-
-      <Grid container item={true} spacing={2} xs={12} sm={8}>
-        <Grid item={true} xs={12}>
-          <div className={classes.seachAddContainer}>
-            <SearchBar onSearch={onSearch} />
-            <Link to="/api/add">
-              <AddButton />
-            </Link>
-          </div>
+    <div>
+      {!isPageLoaded ? (
+        <LoadingSpinner/>
+      ) : (
+        <Grid container>
+          <Grid item={true} xs={false} sm={2} />
+          <Grid container item={true} spacing={2} xs={12} sm={8}>
+            <Grid item={true} xs={12}>
+              <div className={classes.seachAddContainer}>
+                <SearchBar onSearch={onSearch} />
+                <Link to="/api/add">
+                  <AddButton />
+                </Link>
+              </div>
+            </Grid>
+            {props.foundDevelopers.map((item, index) => {
+              return (
+                <Grid key={index} item={true} xs={12} sm={6} md={4}>
+                  <DevCard info={item} component="form" />
+                </Grid>
+              );
+            })}
+          </Grid>
+          <Grid item={true} xs={false} sm={2} />
         </Grid>
-        {props.loading ? (
-          <div className={classes.spinnerContainer}>
-            <CircularProgress />
-          </div>
-        ) : (
-          props.foundDevelopers.map((item, index) => {
-            return (
-              <Grid key={index} item={true} xs={12} sm={6} md={4}>
-                <DevCard info={item} component="form" />
-              </Grid>
-            );
-          })
-        )}
-      </Grid>
-      <Grid item={true} xs={false} sm={2} />
-    </Grid>
+      )}
+    </div>
   );
 };
 

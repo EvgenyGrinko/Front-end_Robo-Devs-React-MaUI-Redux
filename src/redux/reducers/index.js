@@ -34,9 +34,9 @@ const initialState = {
   developers: [],
   foundDevelopers: [],
   currentDeveloper: {},
-  isDeveloperDeleted: false,
+  isDeveloperAdded: false,
   isLoggedIn: false,
-  isTokenCompared: false
+  isTokenCompared: false,
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -48,16 +48,22 @@ function rootReducer(state = initialState, { type, payload }) {
         foundDevelopers: getFoundDevelopers(state.developers, payload),
       };
     case ADD_DEVELOPER_STARTED:
-      return { ...state, loading: true };
+      return { ...state, loading: true, isDeveloperAdded: false };
     case ADD_DEVELOPER_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
+        isDeveloperAdded: true,
         developers: [...state.developers, payload],
       };
     case ADD_DEVELOPER_FAILURE:
-      return { ...state, loading: false, error: payload };
+      return {
+        ...state,
+        loading: false,
+        isDeveloperAdded: false,
+        error: payload,
+      };
     case GET_ALL_DEVELOPERS_STARTED:
       return { ...state, loading: true };
     case GET_ALL_DEVELOPERS_SUCCESS:
@@ -65,13 +71,14 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         loading: false,
         error: null,
+        isDeveloperAdded: false,
         developers: payload,
         foundDevelopers: getFoundDevelopers(payload, state.searchedWord),
       };
     case GET_ALL_DEVELOPERS_FAILURE:
       return { ...state, loading: false, error: payload.error };
     case GET_ONE_DEVELOPER_STARTED:
-      return { ...state, loading: true };
+      return { ...state, loading: true};
     case GET_ONE_DEVELOPER_SUCCESS:
       return {
         ...state,
@@ -82,7 +89,7 @@ function rootReducer(state = initialState, { type, payload }) {
     case GET_ONE_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
     case DELETE_ONE_DEVELOPER_STARTED:
-      return { ...state, loading: true, isDeveloperDeleted: false };
+      return { ...state, loading: true };
     case DELETE_ONE_DEVELOPER_SUCCESS:
       return {
         ...state,
@@ -144,7 +151,12 @@ function rootReducer(state = initialState, { type, payload }) {
         isLoggedIn: payload,
       };
     case COMPARE_TOKEN_FAILURE:
-      return { ...state, loading: false, isTokenCompared: true, error: payload };
+      return {
+        ...state,
+        loading: false,
+        isTokenCompared: true,
+        error: payload,
+      };
 
     case LOGOUT_USER:
       return { ...state, isLoggedIn: false };

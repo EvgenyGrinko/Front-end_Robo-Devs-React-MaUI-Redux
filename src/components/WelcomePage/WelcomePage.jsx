@@ -4,7 +4,7 @@ import LogRegForm from "../LogRegForm/LogRegForm";
 import { connect } from "react-redux";
 import { registerUser, loginUser } from "../../redux/actions/index";
 import * as yup from "yup";
-import {Redirect} from 'react-router-dom'
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -123,7 +123,6 @@ function WelcomePage(props) {
       );
       props.loginUser(loginData);
     } catch (err) {
-      console.log(err);
       const getErrorFields = () =>
         err.inner.reduce((obj, item) => {
           obj[item.path] = item.message;
@@ -136,41 +135,42 @@ function WelcomePage(props) {
 
   return (
     <div className={classes.container}>
-      {props.isLoggedIn ? (<Redirect to="/api/developers" />) : (<div>
-        {isLoginVisible ? (
-          <LogRegForm
-            header="Login"
-            textfields="email, password"
-            values={loginData}
-            notRegistered={true}
-            setLoginVisibility={handleLoginVisibility}
-            onChange={handleLoginData}
-            onSubmit={handleLoginSubmit}
-            errors={errors}
-          />
-        ) : (
-          <LogRegForm
-            header="Register"
-            textfields="name, email, password, confirm password"
-            setLoginVisibility={handleLoginVisibility}
-            onChange={handleRegisterData}
-            notRegistered={false}
-            onSubmit={handleRegisterSubmit}
-            values={registerData}
-            errors={errors}
-          />
-        )}
-      </div>)}
-      
+      {props.isLoggedIn ? (
+        <Redirect to="/api/developers" />
+      ) : (
+        <div>
+          {isLoginVisible ? (
+            <LogRegForm
+              header="Login"
+              textfields="email, password"
+              values={loginData}
+              notRegistered={true}
+              setLoginVisibility={handleLoginVisibility}
+              onChange={handleLoginData}
+              onSubmit={handleLoginSubmit}
+              errors={errors}
+            />
+          ) : (
+            <LogRegForm
+              header="Register"
+              textfields="name, email, password, confirm password"
+              setLoginVisibility={handleLoginVisibility}
+              onChange={handleRegisterData}
+              notRegistered={false}
+              onSubmit={handleRegisterSubmit}
+              values={registerData}
+              errors={errors}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
-
-
 const mapDispatchToProps = { registerUser, loginUser };
-function mapStateToProps (state) {
-  return {isLoggedIn : state.isLoggedIn}
+function mapStateToProps(state) {
+  return { isLoggedIn: state.isLoggedIn };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomePage);

@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Avatar,
   TextField,
   Button,
-  CircularProgress,
+  IconButton,
   Grid,
   Paper,
+  Typography,
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import { getOneDeveloper, editDeveloper } from "../../redux/actions/index";
-import DialogSuccess from "../DialogSuccess/DialogSuccess";
+import DialogSuccess from "../dialogs/DialogSuccessDelete/DialogSuccessDelete";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import EditIcon from "@material-ui/icons/Edit";
+import { Link } from "react-router-dom";
+import DescriptionField from "../DescriptionField/DescriptionField";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -42,17 +46,40 @@ const useStyles = makeStyles((theme) => ({
       height: 500,
     },
   },
-  // mutableData: {
-  //   // width: 400,
-  //   padding: theme.spacing(2),
-  //   height: "100%",
-  // },
   submitData: {
     display: "flex",
     flexDirection: "column",
     padding: theme.spacing(2),
     justifyContent: "space-between",
     height: "100%",
+  },
+  rightPane: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  description: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    padding: theme.spacing(2),
+  },
+  description__content: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    columnGap: theme.spacing(1),
+  },
+  description__leftPane: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+  },
+  description__rightPane: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  editButton: {
+    alignSelf: "flex-end",
   },
 }));
 
@@ -99,6 +126,11 @@ function DeveloperInfo(props) {
     event.preventDefault();
     props.editDeveloper(edittedDeveloper, id);
     setsuccessDialogVisibility(true);
+    setIsEditDeveloper(false);
+  }
+
+  function handleEditClick() {
+    setIsEditDeveloper((prevValue) => !prevValue);
   }
   const classes = useStyles();
   return (
@@ -114,38 +146,110 @@ function DeveloperInfo(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
-              <form
-                action="PATCH"
-                onSubmit={handleSubmit}
-                className={classes.submitData}
-              >
-                <TextField
-                  label="Name"
-                  name="name"
-                  defaultValue={developer.name}
-                  autoFocus
-                  onChange={handleChange}
-                />
-                <TextField
-                  label="Username"
-                  name="username"
-                  defaultValue={developer.username}
-                  onChange={handleChange}
-                />
-                <TextField
-                  label="Phone"
-                  name="phone"
-                  defaultValue={developer.phone}
-                  onChange={handleChange}
-                />
-                <TextField
-                  label="Email"
-                  name="email"
-                  defaultValue={developer.email}
-                  onChange={handleChange}
-                />
-                <Button type="submit">Submit changes</Button>
-              </form>
+              <div className={classes.rightPane}>
+                {isEditDeveloper ? (
+                  <div className={classes.description}>
+                    <IconButton
+                      onClick={handleEditClick}
+                      className={classes.editButton}
+                    >
+                      <ArrowBackIcon />
+                    </IconButton>
+                    <form
+                      action="PATCH"
+                      onSubmit={handleSubmit}
+                      className={classes.submitData}
+                    >
+                      <TextField
+                        label="Name"
+                        name="name"
+                        defaultValue={developer.name}
+                        autoFocus
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        label="Username"
+                        name="username"
+                        defaultValue={developer.username}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        label="Phone"
+                        name="phone"
+                        defaultValue={developer.phone}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        label="Email"
+                        name="email"
+                        defaultValue={developer.email}
+                        onChange={handleChange}
+                      />
+                      <Button type="submit">Submit changes</Button>
+                    </form>
+                  </div>
+                ) : (
+                  <div className={classes.description}>
+                    {/* <Link
+                      to={`/api/edit/${developer._id}`}
+                      className={classes.editButton}
+                    > */}
+                    <IconButton
+                      onClick={handleEditClick}
+                      className={classes.editButton}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    {/* </Link> */}
+                    <div className={classes.description__content}>
+                      <div className={classes.description__leftPane}>
+                        <Typography
+                          color="primary"
+                          variant="h6"
+                          display="inline"
+                        >
+                          Name:
+                        </Typography>
+                        <Typography
+                          color="primary"
+                          variant="h6"
+                          display="inline"
+                        >
+                          Username:
+                        </Typography>
+                        <Typography
+                          color="primary"
+                          variant="h6"
+                          display="inline"
+                        >
+                          Phone:
+                        </Typography>
+                        <Typography
+                          color="primary"
+                          variant="h6"
+                          display="inline"
+                        >
+                          Email:
+                        </Typography>
+                      </div>
+                      <div className={classes.description__rightPane}>
+                        <Typography variant="h6" display="inline">
+                          {developer.name}
+                        </Typography>
+                        <Typography variant="h6" display="inline">
+                          {developer.username}
+                        </Typography>
+                        <Typography variant="h6" display="inline">
+                          {developer.phone}
+                        </Typography>
+                        <Typography variant="h6" display="inline">
+                          {developer.email}
+                        </Typography>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </Grid>
           </Grid>
         </Paper>

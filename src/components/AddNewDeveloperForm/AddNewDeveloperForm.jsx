@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Button, Paper, Avatar } from "@material-ui/core";
 import InputField from "../AddNewDeveloperForm/InputField/InputField";
 import { addDeveloper } from "../../redux/actions/index";
 import { connect } from "react-redux";
-import DialogSuccess from "../DialogSuccess/DialogSuccess";
+import DialogOnSuccessAdd from "../dialogs/DialogOnSuccessAdd/DialogOnSuccessAdd";
+import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -22,14 +23,35 @@ const useStyles = makeStyles((theme) => ({
   container: {
     margin: theme.spacing(4, 0, 0, 0),
   },
-  inputAddImg:{
-    display: "none",
-  }
 }));
+
+const validationSchema = yup.object().shape({
+  name: yup.string().min(2).required("Name should has at least 2 letters."),
+  username: yup
+    .string()
+    .max(255)
+    .required("Userame should has at least 6 letters."),
+  phone: yup
+    .number()
+    .integer("A phone number can't include a decimal point")
+    .positive("A phone number can't start with a minus")
+    .min(11)
+    .required("A phone number is required"),
+  email: yup
+    .string()
+    .email("Please enter email address in format: yourname@example.com")
+    .required("Please enter email address in format: yourname@example.com"),
+});
 
 function AddNewDeveloperForm(props) {
   const classes = useStyles();
-  const [successDialogOpened, setsuccessDialogVisibility] = useState(false);
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    username: "",
+    phone: "",
+  });
+  const [successDialogOpened, setSuccessDialogVisibility] = useState(false);
   const [developer, setDeveloper] = useState({
     name: "",
     email: "",
@@ -37,30 +59,47 @@ function AddNewDeveloperForm(props) {
     phone: "",
   });
 
+  useEffect(() => {
+    if (props.isDeveloperAdded) {
+      setSuccessDialogVisibility(true);
+      setDeveloper({
+        name: "",
+        email: "",
+        username: "",
+        phone: "",
+      });
+    }
+  }, [props.isDeveloperAdded]);
+
   function handleSubmit(event) {
     event.preventDefault();
-    if (
-      Object.values(developer).every((item) => {
-        return item !== "";
-      })){
-        props.addDeveloper(developer);
-        setsuccessDialogVisibility(true);
-      }
-    
+    try {
+      validationSchema.validateSync({ ...developer }, { abortEarly: false });
+      props.addDeveloper(developer);
+    } catch (err) {
+      const getErrorFields = () =>
+        err.inner.reduce((obj, item) => {
+          obj[item.path] = item.message;
+          return obj;
+        }, {});
+      const errorFields = getErrorFields();
+      setErrors(errorFields);
+    }
   }
 
   function handleSuccessDialogClose() {
-    setsuccessDialogVisibility(false);
+    setSuccessDialogVisibility(false);
   }
 
   function handleDeveloperInfo(target) {
+    const { name, value } = target;
+    setErrors((prevValues) => {
+      return { ...prevValues, [name]: "" };
+    });
     setDeveloper((prevValues) => {
-      const name = target.name;
-      const value = target.value;
       return { ...prevValues, [name]: value };
     });
   }
-
 
   return (
     <Grid container>
@@ -70,26 +109,34 @@ function AddNewDeveloperForm(props) {
           <form className={classes.form} action="POST" onSubmit={handleSubmit}>
             <InputField
               name="name"
+              error={errors.name}
               onChange={handleDeveloperInfo}
               value={developer.name}
+              helperText={errors.name}
               isRequired={true}
             />
             <InputField
               name="username"
+              error={errors.username}
               onChange={handleDeveloperInfo}
               value={developer.username}
+              helperText={errors.username}
               isRequired={true}
             />
             <InputField
               name="email"
+              error={errors.email}
               onChange={handleDeveloperInfo}
               value={developer.email}
+              helperText={errors.email}
               isRequired={true}
             />
             <InputField
               name="phone"
+              error={errors.phone}
               onChange={handleDeveloperInfo}
               value={developer.phone}
+              helperText={errors.phone}
               isRequired={true}
             />
             <Button
@@ -104,8 +151,9 @@ function AddNewDeveloperForm(props) {
         </Paper>
       </Grid>
       <Grid item xs={false} sm={2} />
-      <DialogSuccess
-        title={props.error ? `${props.error}` : "New developer added nicely"}
+      <DialogOnSuccessAdd
+        title={`Add another one or move back to the main page?`}
+        text={`New developer added nicely!`}
         open={successDialogOpened}
         onClose={handleSuccessDialogClose}
       />
@@ -114,7 +162,10 @@ function AddNewDeveloperForm(props) {
 }
 
 const addDispatchToProps = { addDeveloper };
-function mapStateToProps(state){
-  return {error: state.error}
+function mapStateToProps(state) {
+  return { isDeveloperAdded: state.isDeveloperAdded };
 }
-export default connect(mapStateToProps, addDispatchToProps)(AddNewDeveloperForm);
+export default connect(
+  mapStateToProps,
+  addDispatchToProps
+)(AddNewDeveloperForm);

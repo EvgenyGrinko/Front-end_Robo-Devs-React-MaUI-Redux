@@ -9,7 +9,7 @@ function DialogSuccess(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle style={{ color: "#4791db" }} id="alert-dialog-title">
           {props.title}
         </DialogTitle>
         <DialogActions>
@@ -19,7 +19,7 @@ function DialogSuccess(props) {
             }}
             color="primary"
           >
-            ok
+            Ok
           </Button>
         </DialogActions>
       </Dialog>

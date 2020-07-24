@@ -5,7 +5,6 @@ import { TextField } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(0, 0, 2, 0),
-    width: "inherit",
   },
 }));
 
@@ -19,6 +18,8 @@ function InputField(props) {
     <div className={classes.container}>
       <TextField
         fullWidth={true}
+        error={props.error}
+        helperText={props.helperText}
         label={props.name[0].toUpperCase() + props.name.slice(1)}
         variant="outlined"
         id={props.name.toLowerCase()}

@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Avatar, TextField, Button, CircularProgress } from "@material-ui/core";
 import { connect } from "react-redux";
 import { getOneDeveloper, editDeveloper } from "../../redux/actions/index";
-import DialogSuccess from "../DialogSuccess/DialogSuccess";
+import DialogSuccess from "../dialogs/DialogSuccessDelete/DialogSuccessDelete";
 
 const useStyles = makeStyles((theme) => ({
   spinnerContainer: {

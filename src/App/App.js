@@ -17,7 +17,6 @@ import DeveloperInfo from "../components/DeveloperInfo/DeveloperInfo";
 import { makeStyles } from "@material-ui/core/styles";
 
 function App(props) {
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
   const { isLoggedIn, isTokenCompared } = props;
 
   useEffect(() => {

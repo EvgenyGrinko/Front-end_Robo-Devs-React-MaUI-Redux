@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import DialogDelete from "../DialogDelete/DialogDelete";
-import DialogSuccess from "../DialogSuccess/DialogSuccess";
+import DialogDelete from "../dialogs/DialogDelete/DialogDelete";
+import DialogSuccessDelete from "../dialogs/DialogSuccessDelete/DialogSuccessDelete";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { Link } from "react-router-dom";
 import { deleteOneDeveloper } from "../../redux/actions/index";
@@ -81,9 +81,6 @@ function DevCard(props) {
             Name: {info.name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            Email:{info.email}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
             Phone: {info.phone}
           </Typography>
         </Grid>
@@ -122,7 +119,7 @@ function DevCard(props) {
             onClose={handleDeleteDialogClose}
             onDelete={handleDeleteDeveloper}
           />
-          <DialogSuccess
+          <DialogSuccessDelete
             open={successDialogOpened}
             onClose={handleSuccessDialogClose}
             title={"You've just deleted a developer"}
