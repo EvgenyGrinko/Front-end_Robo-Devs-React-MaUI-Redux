@@ -40,7 +40,6 @@ function App(props) {
                 container
                 style={{ height: "70vh" }}
                 justify="center"
-                alignItems="center"
               >
                 <PrivateRoute
                   isLoggedIn={isLoggedIn}

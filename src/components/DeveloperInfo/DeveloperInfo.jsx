@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     minWidth: "450px",
     alignItems: "center",
+    marginTop: theme.spacing(10),
     padding: theme.spacing(2),
     [theme.breakpoints.up("xs")]: {
       width: 300,

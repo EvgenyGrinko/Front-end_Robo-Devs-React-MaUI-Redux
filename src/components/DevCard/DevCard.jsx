@@ -20,11 +20,8 @@ import {
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    // maxWidth: 345,
-  },
   media: {
-    height: 200,
+    height: 300,
   },
 }));
 
@@ -70,7 +67,7 @@ function DevCard(props) {
           <CardMedia
             className={classes.media}
             image={info.avatar}
-            title="Dev Name"
+            title={info.name}
           />
         </Link>
         <CardContent></CardContent>
