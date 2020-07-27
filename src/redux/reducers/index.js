@@ -39,6 +39,8 @@ const initialState = {
   isTokenCompared: false,
   isDeveloperEmailAlreadyExists: false,
   isUserEmailAlreadyExists: false,
+  isUserEmailExists: true,
+  isLoginPasswordCorrect: true,
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -142,7 +144,12 @@ function rootReducer(state = initialState, { type, payload }) {
       };
 
     case LOGIN_USER_STARTED:
-      return { ...state, loading: true };
+      return {
+        ...state,
+        loading: true,
+        isUserEmailExists: true,
+        isLoginPasswordCorrect: true,
+      };
     case LOGIN_USER_SUCCESS:
       return {
         ...state,
@@ -151,7 +158,13 @@ function rootReducer(state = initialState, { type, payload }) {
         isLoggedIn: payload,
       };
     case LOGIN_USER_FAILURE:
-      return { ...state, loading: false, error: payload };
+      return {
+        ...state,
+        loading: false,
+        error: payload.error,
+        isUserEmailExists: payload.isUserEmailExists,
+        isLoginPasswordCorrect: payload.isLoginPasswordCorrect,
+      };
 
     case COMPARE_TOKEN_STARTED:
       return { ...state, loading: true, isTokenCompared: false };

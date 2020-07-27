@@ -209,10 +209,7 @@ export function registerUser(user) {
       const { error, isUserEmailAlreadyExists } = err.response.data;
       if (error)
         return dispatch(
-          registerUserFailure({
-            error: error,
-            isUserEmailAlreadyExists: isUserEmailAlreadyExists,
-          })
+          registerUserFailure({ error, isUserEmailAlreadyExists })
         );
       else
         dispatch(
@@ -247,7 +244,21 @@ export function loginUser(user) {
       const { data } = await axios.post(url, user);
       dispatch(loginUserSuccess(data));
     } catch (err) {
-      dispatch(loginUserFailure(err.message));
+      const {
+        error,
+        isUserEmailExists,
+        isLoginPasswordCorrect,
+      } = err.response.data;
+      if (error)
+        return dispatch(
+          loginUserFailure({ error, isUserEmailExists, isLoginPasswordCorrect })
+        );
+      else
+        dispatch(
+          loginUserFailure({
+            error: err.message,
+          })
+        );
     }
   };
 }

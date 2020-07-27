@@ -30,7 +30,11 @@ const validationSchemaLogin = yup.object().shape({
 });
 
 const validationSchemaRegister = yup.object().shape({
-  name: yup.string().min(2).required("Name should has at least 2 letters."),
+  name: yup
+    .string()
+    .matches(/^[A-Za-z]+$/, "You can use only latin alphabet letters")
+    .min(2)
+    .required("Name should has at least 2 letters."),
   email: yup
     .string()
     .email("Please enter email address in format: yourname@example.com")
@@ -46,8 +50,16 @@ const validationSchemaRegister = yup.object().shape({
 });
 
 function WelcomePage(props) {
+  const {
+    isUserEmailAlreadyExists,
+    isLoginPasswordCorrect,
+    isUserEmailExists,
+    registerUser,
+    loginUser,
+    isLoggedIn,
+  } = props;
   useEffect(() => {
-    if (props.isUserEmailAlreadyExists) {
+    if (isUserEmailAlreadyExists) {
       setErrors((prevValues) => {
         return {
           ...prevValues,
@@ -55,7 +67,23 @@ function WelcomePage(props) {
         };
       });
     }
-  }, [props.isUserEmailAlreadyExists]);
+    if (!isUserEmailExists) {
+      setErrors((prevValues) => {
+        return {
+          ...prevValues,
+          email: "This email is not registered yet. Make sure it's correct.",
+        };
+      });
+    }
+    if (!isLoginPasswordCorrect) {
+      setErrors((prevValues) => {
+        return {
+          ...prevValues,
+          password: "Password is incorrect.",
+        };
+      });
+    }
+  }, [isUserEmailAlreadyExists, isUserEmailExists, isLoginPasswordCorrect]);
   const [isLoginVisible, setLoginVisibility] = useState(true);
   const [loginData, setLoginData] = useState({
     email: "",
@@ -103,7 +131,7 @@ function WelcomePage(props) {
           return key !== "confirmPassword";
         })
       );
-      props.registerUser(modifiedData);
+      registerUser(modifiedData);
     } catch (err) {
       const getErrorFields = () =>
         err.inner.reduce((obj, item) => {
@@ -131,7 +159,7 @@ function WelcomePage(props) {
         { ...loginData },
         { abortEarly: false }
       );
-      props.loginUser(loginData);
+      loginUser(loginData);
     } catch (err) {
       const getErrorFields = () =>
         err.inner.reduce((obj, item) => {
@@ -145,7 +173,7 @@ function WelcomePage(props) {
 
   return (
     <div className={classes.container}>
-      {props.isLoggedIn ? (
+      {isLoggedIn ? (
         <Redirect to="/api/developers" />
       ) : (
         <div>
@@ -183,6 +211,8 @@ function mapStateToProps(state) {
   return {
     isLoggedIn: state.isLoggedIn,
     isUserEmailAlreadyExists: state.isUserEmailAlreadyExists,
+    isUserEmailExists: state.isUserEmailExists,
+    isLoginPasswordCorrect: state.isLoginPasswordCorrect,
   };
 }
 
