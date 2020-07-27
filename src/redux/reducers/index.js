@@ -111,7 +111,7 @@ function rootReducer(state = initialState, { type, payload }) {
     case DELETE_ONE_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
     case EDIT_DEVELOPER_STARTED:
-      return { ...state, loading: true };
+      return { ...state, loading: true, isDeveloperEmailAlreadyExists: false };
     case EDIT_DEVELOPER_SUCCESS:
       return {
         ...state,
@@ -124,7 +124,12 @@ function rootReducer(state = initialState, { type, payload }) {
         ),
       };
     case EDIT_DEVELOPER_FAILURE:
-      return { ...state, loading: false, error: payload };
+      return {
+        ...state,
+        loading: false,
+        isDeveloperEmailAlreadyExists: true,
+        error: payload,
+      };
 
     case REGISTER_USER_STARTED:
       return { ...state, loading: true, isUserEmailAlreadyExists: false };

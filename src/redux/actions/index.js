@@ -180,7 +180,9 @@ export function editDeveloper(developer, id) {
       const { data } = await axios.patch(url + id, developer);
       dispatch(editDeveloperSuccess(data.developer));
     } catch (err) {
-      dispatch(editDeveloperFailure(err.message));
+      const { error } = err.response.data;
+      if (error) return dispatch(editDeveloperFailure(error));
+      else dispatch(editDeveloperFailure(err.message));
     }
   };
 }

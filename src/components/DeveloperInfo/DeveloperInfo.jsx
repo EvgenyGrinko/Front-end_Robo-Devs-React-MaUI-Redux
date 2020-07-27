@@ -13,9 +13,9 @@ import { getOneDeveloper, editDeveloper } from "../../redux/actions/index";
 import DialogSuccess from "../dialogs/DialogSuccessDelete/DialogSuccessDelete";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import EditIcon from "@material-ui/icons/Edit";
-import { Link } from "react-router-dom";
-import DescriptionField from "../DescriptionField/DescriptionField";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import * as yup from "yup";
+import DeveloperForm from "../DeveloperForm/DeveloperForm";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -84,6 +84,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// const validationSchema = yup.object().shape({});
+
 function DeveloperInfo(props) {
   const id = props.match.params.id;
 
@@ -95,12 +97,12 @@ function DeveloperInfo(props) {
     currentDeveloper: { developer, success },
   } = props;
 
-  const [edittedDeveloper, setEdittedDeveloper] = useState({
-    name: "",
-    email: "",
-    username: "",
-    phone: "",
-  });
+  // const [edittedDeveloper, setEdittedDeveloper] = useState({
+  //   name: "",
+  //   email: "",
+  //   username: "",
+  //   phone: "",
+  // });
 
   const [isEditDeveloper, setIsEditDeveloper] = useState(false);
 
@@ -110,27 +112,36 @@ function DeveloperInfo(props) {
     setsuccessDialogVisibility(false);
   }
 
-  function handleChange(event) {
-    const name = event.target.name;
-    const value = event.target.value;
-    setEdittedDeveloper((prevValues) => {
-      return Object.fromEntries(
-        Object.entries(prevValues).map(([key, prevValue]) => {
-          if (key === name) return [key, value];
-          if (!prevValue) return [key, developer[key]];
-          else return [key, prevValue];
-        })
-      );
-    });
+  // function handleChange(event) {
+  //   const name = event.target.name;
+  //   const value = event.target.value;
+  //   setEdittedDeveloper((prevValues) => {
+  //     return Object.fromEntries(
+  //       Object.entries(prevValues).map(([key, prevValue]) => {
+  //         if (key === name) return [key, value];
+  //         if (!prevValue) return [key, developer[key]];
+  //         else return [key, prevValue];
+  //       })
+  //     );
+  //   });
+  // }
+  function handleSubmit(developer) {
+    props.editDeveloper(developer, id);
+    // setsuccessDialogVisibility(true);
+    // setIsEditDeveloper(false);
   }
-  function handleSubmit(event) {
-    event.preventDefault();
-    props.editDeveloper(edittedDeveloper, id);
-    setsuccessDialogVisibility(true);
-    setIsEditDeveloper(false);
-  }
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   props.editDeveloper(edittedDeveloper, id);
+  //   setsuccessDialogVisibility(true);
+  //   setIsEditDeveloper(false);
+  // }
 
   function handleEditClick() {
+    setIsEditDeveloper((prevValue) => !prevValue);
+  }
+  function handleBackIcon() {
+    props.getOneDeveloper(id);
     setIsEditDeveloper((prevValue) => !prevValue);
   }
   const classes = useStyles();
@@ -151,12 +162,22 @@ function DeveloperInfo(props) {
                 {isEditDeveloper ? (
                   <div className={classes.description}>
                     <IconButton
-                      onClick={handleEditClick}
+                      onClick={handleBackIcon}
                       className={classes.editButton}
                     >
                       <ArrowBackIcon />
                     </IconButton>
-                    <form
+                    <DeveloperForm
+                      id={id}
+                      onSubmit={handleSubmit}
+                      initialDeveloper={{
+                        name: developer.name,
+                        email: developer.email,
+                        username: developer.username,
+                        phone: developer.phone,
+                      }}
+                    />
+                    {/* <form
                       action="PATCH"
                       onSubmit={handleSubmit}
                       className={classes.submitData}
@@ -186,8 +207,8 @@ function DeveloperInfo(props) {
                         defaultValue={developer.email}
                         onChange={handleChange}
                       />
-                      <Button type="submit">Submit changes</Button>
-                    </form>
+                      <Button type="submit">Submit changes</Button> 
+                    </form>*/}
                   </div>
                 ) : (
                   <div className={classes.description}>
