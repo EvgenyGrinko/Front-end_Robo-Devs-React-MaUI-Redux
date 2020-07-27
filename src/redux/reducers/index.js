@@ -37,6 +37,8 @@ const initialState = {
   isDeveloperAdded: false,
   isLoggedIn: false,
   isTokenCompared: false,
+  isDeveloperEmailAlreadyExists: false,
+  isUserEmailAlreadyExists: false,
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -48,7 +50,12 @@ function rootReducer(state = initialState, { type, payload }) {
         foundDevelopers: getFoundDevelopers(state.developers, payload),
       };
     case ADD_DEVELOPER_STARTED:
-      return { ...state, loading: true, isDeveloperAdded: false };
+      return {
+        ...state,
+        loading: true,
+        isDeveloperAdded: false,
+        isDeveloperEmailAlreadyExists: false,
+      };
     case ADD_DEVELOPER_SUCCESS:
       return {
         ...state,
@@ -62,7 +69,8 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         loading: false,
         isDeveloperAdded: false,
-        error: payload,
+        isDeveloperEmailAlreadyExists: payload.isDeveloperEmailAlreadyExists,
+        error: payload.error,
       };
     case GET_ALL_DEVELOPERS_STARTED:
       return { ...state, loading: true };
@@ -78,7 +86,7 @@ function rootReducer(state = initialState, { type, payload }) {
     case GET_ALL_DEVELOPERS_FAILURE:
       return { ...state, loading: false, error: payload.error };
     case GET_ONE_DEVELOPER_STARTED:
-      return { ...state, loading: true};
+      return { ...state, loading: true };
     case GET_ONE_DEVELOPER_SUCCESS:
       return {
         ...state,
@@ -117,7 +125,7 @@ function rootReducer(state = initialState, { type, payload }) {
       return { ...state, loading: false, error: payload };
 
     case REGISTER_USER_STARTED:
-      return { ...state, loading: true };
+      return { ...state, loading: true, isUserEmailAlreadyExists: false };
     case REGISTER_USER_SUCCESS:
       return {
         ...state,
@@ -126,7 +134,12 @@ function rootReducer(state = initialState, { type, payload }) {
         isLoggedIn: payload,
       };
     case REGISTER_USER_FAILURE:
-      return { ...state, loading: false, error: payload };
+      return {
+        ...state,
+        loading: false,
+        error: payload.error,
+        isUserEmailAlreadyExists: payload.isUserEmailAlreadyExists,
+      };
 
     case LOGIN_USER_STARTED:
       return { ...state, loading: true };

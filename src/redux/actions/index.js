@@ -140,7 +140,21 @@ export function addDeveloper(developer) {
       const { data } = await axios.post(url, developer);
       dispatch(addDeveloperSuccess(data.developer));
     } catch (err) {
-      dispatch(addDeveloperFailure(err.message));
+      const { error, isDeveloperEmailAlreadyExists } = err.response.data;
+      if (error)
+        return dispatch(
+          addDeveloperFailure({
+            isDeveloperEmailAlreadyExists: isDeveloperEmailAlreadyExists,
+            error: error,
+          })
+        );
+      else
+        dispatch(
+          addDeveloperFailure({
+            isDeveloperEmailAlreadyExists: false,
+            error: err.message,
+          })
+        );
     }
   };
 }
@@ -192,7 +206,21 @@ export function registerUser(user) {
       const { data } = await axios.post(url, user);
       dispatch(registerUserSuccess(data));
     } catch (err) {
-      dispatch(registerUserFailure(err.message));
+      const { error, isUserEmailAlreadyExists } = err.response.data;
+      if (error)
+        return dispatch(
+          registerUserFailure({
+            error: error,
+            isUserEmailAlreadyExists: isUserEmailAlreadyExists,
+          })
+        );
+      else
+        dispatch(
+          registerUserFailure({
+            error: err.message,
+            isUserEmailAlreadyExists: false,
+          })
+        );
     }
   };
 }

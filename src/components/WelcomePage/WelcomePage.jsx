@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import LogRegForm from "../LogRegForm/LogRegForm";
 import { connect } from "react-redux";
@@ -46,6 +46,16 @@ const validationSchemaRegister = yup.object().shape({
 });
 
 function WelcomePage(props) {
+  useEffect(() => {
+    if (props.isUserEmailAlreadyExists) {
+      setErrors((prevValues) => {
+        return {
+          ...prevValues,
+          email: "This email already registered. Try another one.",
+        };
+      });
+    }
+  }, [props.isUserEmailAlreadyExists]);
   const [isLoginVisible, setLoginVisibility] = useState(true);
   const [loginData, setLoginData] = useState({
     email: "",
@@ -170,7 +180,10 @@ function WelcomePage(props) {
 
 const mapDispatchToProps = { registerUser, loginUser };
 function mapStateToProps(state) {
-  return { isLoggedIn: state.isLoggedIn };
+  return {
+    isLoggedIn: state.isLoggedIn,
+    isUserEmailAlreadyExists: state.isUserEmailAlreadyExists,
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomePage);

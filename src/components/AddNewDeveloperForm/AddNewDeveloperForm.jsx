@@ -30,6 +30,7 @@ const validationSchema = yup.object().shape({
   username: yup
     .string()
     .max(255)
+    .min(6)
     .required("Userame should has at least 6 letters."),
   phone: yup
     .number()
@@ -69,7 +70,15 @@ function AddNewDeveloperForm(props) {
         phone: "",
       });
     }
-  }, [props.isDeveloperAdded]);
+    if (props.isDeveloperEmailAlreadyExists) {
+      setErrors((prevValues) => {
+        return {
+          ...prevValues,
+          email: "This email already exists. Choose another one.",
+        };
+      });
+    }
+  }, [props.isDeveloperAdded, props.isDeveloperEmailAlreadyExists]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -109,7 +118,7 @@ function AddNewDeveloperForm(props) {
           <form className={classes.form} action="POST" onSubmit={handleSubmit}>
             <InputField
               name="name"
-              error={errors.name}
+              error={Boolean(errors.name)}
               onChange={handleDeveloperInfo}
               value={developer.name}
               helperText={errors.name}
@@ -117,7 +126,7 @@ function AddNewDeveloperForm(props) {
             />
             <InputField
               name="username"
-              error={errors.username}
+              error={Boolean(errors.username)}
               onChange={handleDeveloperInfo}
               value={developer.username}
               helperText={errors.username}
@@ -125,7 +134,7 @@ function AddNewDeveloperForm(props) {
             />
             <InputField
               name="email"
-              error={errors.email}
+              error={Boolean(errors.email)}
               onChange={handleDeveloperInfo}
               value={developer.email}
               helperText={errors.email}
@@ -133,7 +142,7 @@ function AddNewDeveloperForm(props) {
             />
             <InputField
               name="phone"
-              error={errors.phone}
+              error={Boolean(errors.phone)}
               onChange={handleDeveloperInfo}
               value={developer.phone}
               helperText={errors.phone}
@@ -163,7 +172,10 @@ function AddNewDeveloperForm(props) {
 
 const addDispatchToProps = { addDeveloper };
 function mapStateToProps(state) {
-  return { isDeveloperAdded: state.isDeveloperAdded };
+  return {
+    isDeveloperAdded: state.isDeveloperAdded,
+    isDeveloperEmailAlreadyExists: state.isDeveloperEmailAlreadyExists,
+  };
 }
 export default connect(
   mapStateToProps,
