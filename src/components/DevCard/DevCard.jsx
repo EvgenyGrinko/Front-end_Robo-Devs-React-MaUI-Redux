@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import DialogDelete from "../dialogs/DialogDelete/DialogDelete";
-import DialogSuccessDelete from "../dialogs/DialogSuccessDelete/DialogSuccessDelete";
+import NotificationMessage from "../NotificationMessage/NotificationMessage";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { Link } from "react-router-dom";
 import { deleteOneDeveloper } from "../../redux/actions/index";
@@ -29,9 +29,9 @@ function DevCard(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpened, setDeleteDialogVisibility] = useState(false);
-  const [successDialogOpened, setSuccessDialogVisibility] = useState(false);
   const [menuOpened, setMenuVisibility] = useState(false);
   const { info } = props;
+  const [notificationVisibility, setNotificationVisibility] = useState(false);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,10 +54,14 @@ function DevCard(props) {
   const handleDeleteDeveloper = () => {
     props.deleteOneDeveloper(info._id);
     setDeleteDialogVisibility(false);
-    setSuccessDialogVisibility(true);
+    setNotificationVisibility(true);
   };
-  const handleSuccessDialogClose = () => {
-    setSuccessDialogVisibility(false);
+
+  const handleDialogClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setNotificationVisibility(false);
   };
 
   return (
@@ -116,10 +120,10 @@ function DevCard(props) {
             onClose={handleDeleteDialogClose}
             onDelete={handleDeleteDeveloper}
           />
-          <DialogSuccessDelete
-            open={successDialogOpened}
-            onClose={handleSuccessDialogClose}
-            title={"You've just deleted a developer"}
+          <NotificationMessage
+            visibility={notificationVisibility}
+            handleClick={handleDialogClose}
+            message="Developer deleted"
           />
         </div>
       </CardActions>

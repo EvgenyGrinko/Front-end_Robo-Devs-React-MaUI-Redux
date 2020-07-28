@@ -1,5 +1,4 @@
 import {
-  SET_SEARCHED_WORD,
   ADD_DEVELOPER_STARTED,
   ADD_DEVELOPER_SUCCESS,
   ADD_DEVELOPER_FAILURE,
@@ -25,12 +24,11 @@ import {
   COMPARE_TOKEN_SUCCESS,
   COMPARE_TOKEN_FAILURE,
   LOGOUT_USER,
+  SEARCH_FOR_DEVELOPERS_STARTED,
+  SEARCH_FOR_DEVELOPERS_SUCCESS,
+  SEARCH_FOR_DEVELOPERS_FAILURE,
 } from "../constants/acion-types";
 import axios from "axios";
-
-export function setSearchedWord(payload) {
-  return { type: SET_SEARCHED_WORD, payload };
-}
 
 export function getAllDevelopers() {
   return async (dispatch) => {
@@ -294,4 +292,21 @@ export function compareToken(token) {
 
 export function logoutUser() {
   return { type: LOGOUT_USER };
+}
+
+export function findDevelopers(searchedWord) {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: SEARCH_FOR_DEVELOPERS_STARTED });
+
+      const url = `/api/developers/search/?query=${searchedWord}`;
+      const { data } = await axios.get(url);
+      dispatch({
+        type: SEARCH_FOR_DEVELOPERS_SUCCESS,
+        payload: data.developers,
+      });
+    } catch (err) {
+      dispatch({ type: SEARCH_FOR_DEVELOPERS_FAILURE, payload: err.message });
+    }
+  };
 }

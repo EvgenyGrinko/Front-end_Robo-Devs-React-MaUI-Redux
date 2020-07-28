@@ -1,5 +1,4 @@
 import {
-  SET_SEARCHED_WORD,
   ADD_DEVELOPER_STARTED,
   ADD_DEVELOPER_SUCCESS,
   ADD_DEVELOPER_FAILURE,
@@ -25,14 +24,15 @@ import {
   COMPARE_TOKEN_SUCCESS,
   COMPARE_TOKEN_FAILURE,
   LOGOUT_USER,
+  SEARCH_FOR_DEVELOPERS_STARTED,
+  SEARCH_FOR_DEVELOPERS_SUCCESS,
+  SEARCH_FOR_DEVELOPERS_FAILURE,
 } from "../constants/acion-types";
 
 const initialState = {
-  searchedWord: "",
   loading: false,
   error: null,
   developers: [],
-  foundDevelopers: [],
   currentDeveloper: "",
   isDeveloperAdded: false,
   isLoggedIn: false,
@@ -41,17 +41,11 @@ const initialState = {
   isUserEmailAlreadyExists: false,
   isUserEmailExists: true,
   isLoginPasswordCorrect: true,
-  isDeveloperEditted : false
+  isDeveloperEditted: false,
 };
 
 function rootReducer(state = initialState, { type, payload }) {
   switch (type) {
-    case SET_SEARCHED_WORD:
-      return {
-        ...state,
-        searchedWord: payload,
-        foundDevelopers: getFoundDevelopers(state.developers, payload),
-      };
     case ADD_DEVELOPER_STARTED:
       return {
         ...state,
@@ -84,7 +78,6 @@ function rootReducer(state = initialState, { type, payload }) {
         error: null,
         isDeveloperAdded: false,
         developers: payload,
-        foundDevelopers: getFoundDevelopers(payload, state.searchedWord),
       };
     case GET_ALL_DEVELOPERS_FAILURE:
       return { ...state, loading: false, error: payload.error };
@@ -107,12 +100,16 @@ function rootReducer(state = initialState, { type, payload }) {
         loading: false,
         error: null,
         developers: payload,
-        foundDevelopers: getFoundDevelopers(payload, state.searchedWord),
       };
     case DELETE_ONE_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
     case EDIT_DEVELOPER_STARTED:
-      return { ...state, loading: true, isDeveloperEmailAlreadyExists: false, isDeveloperEditted: false };
+      return {
+        ...state,
+        loading: true,
+        isDeveloperEmailAlreadyExists: false,
+        isDeveloperEditted: false,
+      };
     case EDIT_DEVELOPER_SUCCESS:
       return {
         ...state,
@@ -120,10 +117,6 @@ function rootReducer(state = initialState, { type, payload }) {
         error: null,
         isDeveloperEditted: true,
         developers: updateDevelopers(state.developers, payload),
-        foundDevelopers: getFoundDevelopers(
-          updateDevelopers(state.developers, payload),
-          state.searchedWord
-        ),
       };
     case EDIT_DEVELOPER_FAILURE:
       return {
@@ -193,21 +186,26 @@ function rootReducer(state = initialState, { type, payload }) {
 
     case LOGOUT_USER:
       return { ...state, isLoggedIn: false };
+
+    case SEARCH_FOR_DEVELOPERS_STARTED:
+      return { ...state, loading: true };
+    case SEARCH_FOR_DEVELOPERS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        developers: payload,
+      };
+    case SEARCH_FOR_DEVELOPERS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload,
+      };
+
     default:
       return state;
   }
-}
-
-function getFoundDevelopers(developers, searchedWord) {
-  const foundDevelopers = developers.filter((item) => {
-    return (
-      item.name.toLowerCase().includes(searchedWord.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchedWord.toLowerCase()) ||
-      item.username.toLowerCase().includes(searchedWord.toLowerCase()) ||
-      item.phone.toLowerCase().includes(searchedWord.toLowerCase())
-    );
-  });
-  return foundDevelopers;
 }
 
 function updateDevelopers(developers, updatedDeveloper) {

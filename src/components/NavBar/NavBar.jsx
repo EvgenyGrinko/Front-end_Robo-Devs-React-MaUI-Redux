@@ -8,7 +8,6 @@ import ToysIcon from "@material-ui/icons/Toys";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutUser } from "../../redux/actions/index";
-import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +24,6 @@ function NavBar(props) {
 
   function handleLogout() {
     localStorage.removeItem("token");
-    // document.location.reload(true);
     props.logoutUser();
   }
 

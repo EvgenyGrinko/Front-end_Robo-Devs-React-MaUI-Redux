@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import DevCard from "../DevCard/DevCard";
 import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
-import { getAllDevelopers, setSearchedWord } from "../../redux/actions/index";
+import { getAllDevelopers, findDevelopers } from "../../redux/actions/index";
 import SearchBar from "../SearchBar/SearchBar";
 import AddButton from "../AddButton/AddButton";
 import { makeStyles } from "@material-ui/core/styles";
@@ -39,14 +39,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Developers = (props) => {
-  const { developers, searchedWord } = props;
-
+  const { developers, getAllDevelopers } = props;
   useEffect(() => {
-    props.getAllDevelopers();
-  }, []);
+    getAllDevelopers();
+  }, [getAllDevelopers]);
   function onSearch(searchedWord) {
     setTimeout(() => {
-      props.setSearchedWord(searchedWord);
+      props.findDevelopers(searchedWord);
     }, 1000);
   }
 
@@ -71,13 +70,17 @@ const Developers = (props) => {
             spacing={3}
             className={classes.itemsContainer}
           >
-            {developers.map((item, index) => {
-              return (
-                <Grid key={index} item={true} xs={12} sm={6} md={4}>
-                  <DevCard info={item} component="form" />
-                </Grid>
-              );
-            })}
+            {developers.length ? (
+              developers.map((item, index) => {
+                return (
+                  <Grid key={index} item={true} xs={12} sm={6} md={4}>
+                    <DevCard info={item} component="form" />
+                  </Grid>
+                );
+              })
+            ) : (
+              <div>No developers found</div>
+            )}
           </Grid>
         </Grid>
         <Grid item={true} xs={false} sm={2} />
@@ -86,9 +89,12 @@ const Developers = (props) => {
   );
 };
 
-const mapDispatchToProps = { getAllDevelopers, setSearchedWord };
+const mapDispatchToProps = {
+  getAllDevelopers,
+  findDevelopers,
+};
 function mapStateToProps(state) {
-  return { developers: state.developers, searchedWord: state.searchedWord };
+  return { developers: state.developers };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Developers);

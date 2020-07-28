@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Paper } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import InputField from "../AddNewDeveloperForm/InputField/InputField";
 import * as yup from "yup";
 import { connect } from "react-redux";
@@ -52,6 +52,7 @@ function DeveloperForm(props) {
     type,
     onEditSetSuccessDialogVisibility,
     isDeveloperEditted,
+    onSubmit,
   } = props;
 
   const [errors, setErrors] = useState({
@@ -96,12 +97,18 @@ function DeveloperForm(props) {
         onEditSetSuccessDialogVisibility(true);
       }, 150);
     }
-  }, [isDeveloperEmailAlreadyExists, error, isDeveloperEditted]);
+  }, [
+    isDeveloperEmailAlreadyExists,
+    error,
+    isDeveloperEditted,
+    onEditSetSuccessDialogVisibility,
+    type,
+  ]);
   function handleSubmit(event) {
     event.preventDefault();
     try {
       validationSchema.validateSync({ ...developer }, { abortEarly: false });
-      props.onSubmit(developer);
+      onSubmit(developer);
       setErrors({
         name: "",
         email: "",

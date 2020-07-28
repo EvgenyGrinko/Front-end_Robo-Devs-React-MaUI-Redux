@@ -7,8 +7,7 @@ import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import EditIcon from "@material-ui/icons/Edit";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import DeveloperForm from "../DeveloperForm/DeveloperForm";
-import Snackbar from "@material-ui/core/Snackbar";
-import CloseIcon from "@material-ui/icons/Close";
+import NotificationMessage from "../NotificationMessage/NotificationMessage";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -77,18 +76,18 @@ const useStyles = makeStyles((theme) => ({
 
 function DeveloperInfo(props) {
   const id = props.match.params.id;
-
-  useEffect(() => {
-    props.getOneDeveloper(id);
-  }, []);
-
   const {
     currentDeveloper: { developer, success },
+    getOneDeveloper,
   } = props;
+
+  useEffect(() => {
+    getOneDeveloper(id);
+  }, [getOneDeveloper, id]);
 
   const [isEditDeveloper, setIsEditDeveloper] = useState(false);
 
-  const [successDialogOpened, setsuccessDialogVisibility] = useState(false);
+  const [notificationVisibility, setNotificationVisibility] = useState(false);
 
   function handleSubmit(developer) {
     props.editDeveloper(developer, id);
@@ -98,7 +97,7 @@ function DeveloperInfo(props) {
     if (reason === "clickaway") {
       return;
     }
-    setsuccessDialogVisibility(false);
+    setNotificationVisibility(false);
   };
 
   function handleEditClick() {
@@ -143,7 +142,7 @@ function DeveloperInfo(props) {
                       }}
                       type="edit"
                       onEditSetSuccessDialogVisibility={
-                        setsuccessDialogVisibility
+                        setNotificationVisibility
                       }
                     />
                   </div>
@@ -204,27 +203,10 @@ function DeveloperInfo(props) {
                   </div>
                 )}
               </div>
-              <Snackbar
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                open={successDialogOpened}
-                autoHideDuration={3000}
-                onClose={handleDialogClose}
+              <NotificationMessage
+                visibility={notificationVisibility}
+                handleClick={handleDialogClose}
                 message="Developer eddited successfully"
-                action={
-                  <React.Fragment>
-                    <IconButton
-                      size="small"
-                      aria-label="close"
-                      color="inherit"
-                      onClick={handleDialogClose}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </React.Fragment>
-                }
               />
             </Grid>
           </Grid>
