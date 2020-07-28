@@ -33,7 +33,7 @@ const initialState = {
   error: null,
   developers: [],
   foundDevelopers: [],
-  currentDeveloper: {},
+  currentDeveloper: "",
   isDeveloperAdded: false,
   isLoggedIn: false,
   isTokenCompared: false,
@@ -41,6 +41,7 @@ const initialState = {
   isUserEmailAlreadyExists: false,
   isUserEmailExists: true,
   isLoginPasswordCorrect: true,
+  isDeveloperEditted : false
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -75,7 +76,7 @@ function rootReducer(state = initialState, { type, payload }) {
         error: payload.error,
       };
     case GET_ALL_DEVELOPERS_STARTED:
-      return { ...state, loading: true };
+      return { ...state, loading: true, currentDeveloper: "" };
     case GET_ALL_DEVELOPERS_SUCCESS:
       return {
         ...state,
@@ -88,7 +89,7 @@ function rootReducer(state = initialState, { type, payload }) {
     case GET_ALL_DEVELOPERS_FAILURE:
       return { ...state, loading: false, error: payload.error };
     case GET_ONE_DEVELOPER_STARTED:
-      return { ...state, loading: true };
+      return { ...state, loading: true, isDeveloperEditted: false };
     case GET_ONE_DEVELOPER_SUCCESS:
       return {
         ...state,
@@ -111,12 +112,13 @@ function rootReducer(state = initialState, { type, payload }) {
     case DELETE_ONE_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
     case EDIT_DEVELOPER_STARTED:
-      return { ...state, loading: true, isDeveloperEmailAlreadyExists: false };
+      return { ...state, loading: true, isDeveloperEmailAlreadyExists: false, isDeveloperEditted: false };
     case EDIT_DEVELOPER_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
+        isDeveloperEditted: true,
         developers: updateDevelopers(state.developers, payload),
         foundDevelopers: getFoundDevelopers(
           updateDevelopers(state.developers, payload),

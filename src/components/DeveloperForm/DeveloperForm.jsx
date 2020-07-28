@@ -4,7 +4,6 @@ import { Button, Paper } from "@material-ui/core";
 import InputField from "../AddNewDeveloperForm/InputField/InputField";
 import * as yup from "yup";
 import { connect } from "react-redux";
-import { getOneDeveloper } from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -48,10 +47,11 @@ function DeveloperForm(props) {
   const classes = useStyles();
   const {
     isDeveloperEmailAlreadyExists,
-    currentDeveloper,
+    initialDeveloper,
     error,
-    getOneDeveloper,
-    id,
+    type,
+    onEditSetSuccessDialogVisibility,
+    isDeveloperEditted,
   } = props;
 
   const [errors, setErrors] = useState({
@@ -60,13 +60,18 @@ function DeveloperForm(props) {
     username: "",
     phone: "",
   });
-  const [developer, setDeveloper] = useState({
-    name: "",
-    email: "",
-    username: "",
-    phone: "",
+  const [developer, setDeveloper] = useState(() => {
+    if (type === "edit") {
+      return {
+        name: initialDeveloper.name,
+        email: initialDeveloper.email,
+        username: initialDeveloper.username,
+        phone: initialDeveloper.phone,
+      };
+    } else {
+      return { name: "", email: "", username: "", phone: "" };
+    }
   });
-  // const id = props.match.params.id;
 
   useEffect(() => {
     if (isDeveloperEmailAlreadyExists) {
@@ -77,21 +82,21 @@ function DeveloperForm(props) {
         };
       });
     }
-    if (id) {
-      getOneDeveloper(id);
-    }
-
-    if (currentDeveloper)
+    if (type === "add" && !error) {
       setDeveloper({
-        name: currentDeveloper.developer.name,
-        email: currentDeveloper.developer.email,
-        phone: currentDeveloper.developer.phone,
-        username: currentDeveloper.developer.username,
+        name: "",
+        email: "",
+        username: "",
+        phone: "",
       });
-
-    // if (initialDeveloper) setDeveloper(initialDeveloper);
-  }, [isDeveloperEmailAlreadyExists]);
-
+    }
+    if (type === "edit" && isDeveloperEditted) {
+      onEditSetSuccessDialogVisibility(false);
+      setTimeout(() => {
+        onEditSetSuccessDialogVisibility(true);
+      }, 150);
+    }
+  }, [isDeveloperEmailAlreadyExists, error, isDeveloperEditted]);
   function handleSubmit(event) {
     event.preventDefault();
     try {
@@ -103,15 +108,8 @@ function DeveloperForm(props) {
         username: "",
         phone: "",
       });
-      // if (!error){
-      //   setDeveloper({
-      //     name: "",
-      //     email: "",
-      //     username: "",
-      //     phone: "",
-      //   });
-      // }
     } catch (err) {
+      if (type === "edit") onEditSetSuccessDialogVisibility(false);
       const getErrorFields = () =>
         err.inner.reduce((obj, item) => {
           obj[item.path] = item.message;
@@ -178,12 +176,12 @@ function DeveloperForm(props) {
   );
 }
 
-const addDispatchToProps = { getOneDeveloper };
 function mapStateToProps(state) {
   return {
     isDeveloperEmailAlreadyExists: state.isDeveloperEmailAlreadyExists,
     error: state.error,
     currentDeveloper: state.currentDeveloper,
+    isDeveloperEditted: state.isDeveloperEditted,
   };
 }
-export default connect(mapStateToProps, addDispatchToProps)(DeveloperForm);
+export default connect(mapStateToProps)(DeveloperForm);

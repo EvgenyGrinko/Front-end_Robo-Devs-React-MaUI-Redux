@@ -8,6 +8,7 @@ import ToysIcon from "@material-ui/icons/Toys";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutUser } from "../../redux/actions/index";
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,14 +32,16 @@ function NavBar(props) {
   return (
     <AppBar position="static">
       <Toolbar className={classes.root}>
-        <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-        >
-          <ToysIcon />
-        </IconButton>
+        <Link to="/api/developers">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+          >
+            <ToysIcon />
+          </IconButton>
+        </Link>
+
         <Link to="/api/developers">
           <Button color="inherit">Home</Button>
         </Link>

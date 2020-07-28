@@ -1,32 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  TextField,
-  Button,
-  IconButton,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { IconButton, Grid, Paper, Typography } from "@material-ui/core";
 import { connect } from "react-redux";
 import { getOneDeveloper, editDeveloper } from "../../redux/actions/index";
-import DialogSuccess from "../dialogs/DialogSuccessDelete/DialogSuccessDelete";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import EditIcon from "@material-ui/icons/Edit";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import * as yup from "yup";
 import DeveloperForm from "../DeveloperForm/DeveloperForm";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
-    maxWidth: "100%",
-    height: "auto",
     border: "1px solid #0d47a1",
     borderRadius: theme.spacing(2),
   },
   container: {
     display: "flex",
-    minWidth: "450px",
     alignItems: "center",
     marginTop: theme.spacing(10),
     padding: theme.spacing(2),
@@ -78,13 +68,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
+    flexGrow: 1,
   },
   editButton: {
     alignSelf: "flex-end",
   },
 }));
-
-// const validationSchema = yup.object().shape({});
 
 function DeveloperInfo(props) {
   const id = props.match.params.id;
@@ -97,45 +86,20 @@ function DeveloperInfo(props) {
     currentDeveloper: { developer, success },
   } = props;
 
-  // const [edittedDeveloper, setEdittedDeveloper] = useState({
-  //   name: "",
-  //   email: "",
-  //   username: "",
-  //   phone: "",
-  // });
-
   const [isEditDeveloper, setIsEditDeveloper] = useState(false);
 
   const [successDialogOpened, setsuccessDialogVisibility] = useState(false);
 
-  function handleSuccessDialogClose() {
-    setsuccessDialogVisibility(false);
-  }
-
-  // function handleChange(event) {
-  //   const name = event.target.name;
-  //   const value = event.target.value;
-  //   setEdittedDeveloper((prevValues) => {
-  //     return Object.fromEntries(
-  //       Object.entries(prevValues).map(([key, prevValue]) => {
-  //         if (key === name) return [key, value];
-  //         if (!prevValue) return [key, developer[key]];
-  //         else return [key, prevValue];
-  //       })
-  //     );
-  //   });
-  // }
   function handleSubmit(developer) {
     props.editDeveloper(developer, id);
-    // setsuccessDialogVisibility(true);
-    // setIsEditDeveloper(false);
   }
-  // function handleSubmit(event) {
-  //   event.preventDefault();
-  //   props.editDeveloper(edittedDeveloper, id);
-  //   setsuccessDialogVisibility(true);
-  //   setIsEditDeveloper(false);
-  // }
+
+  const handleDialogClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setsuccessDialogVisibility(false);
+  };
 
   function handleEditClick() {
     setIsEditDeveloper((prevValue) => !prevValue);
@@ -143,6 +107,7 @@ function DeveloperInfo(props) {
   function handleBackIcon() {
     props.getOneDeveloper(id);
     setIsEditDeveloper((prevValue) => !prevValue);
+    handleDialogClose();
   }
   const classes = useStyles();
   return (
@@ -176,53 +141,20 @@ function DeveloperInfo(props) {
                         username: developer.username,
                         phone: developer.phone,
                       }}
+                      type="edit"
+                      onEditSetSuccessDialogVisibility={
+                        setsuccessDialogVisibility
+                      }
                     />
-                    {/* <form
-                      action="PATCH"
-                      onSubmit={handleSubmit}
-                      className={classes.submitData}
-                    >
-                      <TextField
-                        label="Name"
-                        name="name"
-                        defaultValue={developer.name}
-                        autoFocus
-                        onChange={handleChange}
-                      />
-                      <TextField
-                        label="Username"
-                        name="username"
-                        defaultValue={developer.username}
-                        onChange={handleChange}
-                      />
-                      <TextField
-                        label="Phone"
-                        name="phone"
-                        defaultValue={developer.phone}
-                        onChange={handleChange}
-                      />
-                      <TextField
-                        label="Email"
-                        name="email"
-                        defaultValue={developer.email}
-                        onChange={handleChange}
-                      />
-                      <Button type="submit">Submit changes</Button> 
-                    </form>*/}
                   </div>
                 ) : (
                   <div className={classes.description}>
-                    {/* <Link
-                      to={`/api/edit/${developer._id}`}
-                      className={classes.editButton}
-                    > */}
                     <IconButton
                       onClick={handleEditClick}
                       className={classes.editButton}
                     >
                       <EditIcon />
                     </IconButton>
-                    {/* </Link> */}
                     <div className={classes.description__content}>
                       <div className={classes.description__leftPane}>
                         <Typography
@@ -272,17 +204,34 @@ function DeveloperInfo(props) {
                   </div>
                 )}
               </div>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                open={successDialogOpened}
+                autoHideDuration={3000}
+                onClose={handleDialogClose}
+                message="Developer eddited successfully"
+                action={
+                  <React.Fragment>
+                    <IconButton
+                      size="small"
+                      aria-label="close"
+                      color="inherit"
+                      onClick={handleDialogClose}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </React.Fragment>
+                }
+              />
             </Grid>
           </Grid>
         </Paper>
       ) : (
         <LoadingSpinner />
       )}
-      <DialogSuccess
-        title={props.error ? `${props.error}` : "Developer eddited nicely"}
-        open={successDialogOpened}
-        onClose={handleSuccessDialogClose}
-      />
     </div>
   );
 }
