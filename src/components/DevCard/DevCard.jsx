@@ -21,7 +21,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   media: {
-    height: 300,
+    height: 250,
   },
 }));
 

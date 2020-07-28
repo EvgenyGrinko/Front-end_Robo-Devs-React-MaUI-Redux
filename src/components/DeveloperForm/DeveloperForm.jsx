@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    padding: theme.spacing(4),
+    paddingTop: theme.spacing(1),
     display: "flex",
     flexFlow: "column nowrap",
     overflow: "auto",

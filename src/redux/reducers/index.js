@@ -42,6 +42,7 @@ const initialState = {
   isUserEmailExists: true,
   isLoginPasswordCorrect: true,
   isDeveloperEditted: false,
+  developersLoaded: false,
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -70,17 +71,28 @@ function rootReducer(state = initialState, { type, payload }) {
         error: payload.error,
       };
     case GET_ALL_DEVELOPERS_STARTED:
-      return { ...state, loading: true, currentDeveloper: "" };
+      return {
+        ...state,
+        loading: true,
+        currentDeveloper: "",
+        developersLoaded: false,
+      };
     case GET_ALL_DEVELOPERS_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
         isDeveloperAdded: false,
+        developersLoaded: true,
         developers: payload,
       };
     case GET_ALL_DEVELOPERS_FAILURE:
-      return { ...state, loading: false, error: payload.error };
+      return {
+        ...state,
+        loading: false,
+        error: payload.error,
+        developersLoaded: false,
+      };
     case GET_ONE_DEVELOPER_STARTED:
       return { ...state, loading: true, isDeveloperEditted: false };
     case GET_ONE_DEVELOPER_SUCCESS:

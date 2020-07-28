@@ -10,9 +10,10 @@ import DeveloperForm from "../DeveloperForm/DeveloperForm";
 import NotificationMessage from "../NotificationMessage/NotificationMessage";
 
 const useStyles = makeStyles((theme) => ({
-  avatar: {
-    border: "1px solid #0d47a1",
-    borderRadius: theme.spacing(2),
+  avatar: {},
+  img: {
+    width: "100%",
+    height: "auto",
   },
   container: {
     display: "flex",
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(10),
     padding: theme.spacing(2),
     [theme.breakpoints.up("xs")]: {
-      width: 300,
+      width: 500,
       height: 700,
     },
     [theme.breakpoints.up("sm")]: {
@@ -36,41 +37,31 @@ const useStyles = makeStyles((theme) => ({
       height: 500,
     },
   },
-  submitData: {
-    display: "flex",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    justifyContent: "space-between",
-    height: "100%",
-  },
   rightPane: {
     display: "flex",
     flexDirection: "column",
+    height: "100%",
+  },
+  navButton: {
+    textAlign: "right",
+    width: "100%",
   },
   description: {
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(6),
   },
   description__content: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    columnGap: theme.spacing(1),
-  },
-  description__leftPane: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-  },
-  description__rightPane: {
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    flexGrow: 1,
   },
-  editButton: {
-    alignSelf: "flex-end",
+  description__block: {
+    paddingBottom: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
 }));
 
@@ -115,22 +106,24 @@ function DeveloperInfo(props) {
         <Paper className={classes.container} elevation={3}>
           <Grid container>
             <Grid item xs={12} sm={6} md={6}>
-              <img
-                src={developer.avatar}
-                className={classes.avatar}
-                alt="Developer avatar"
-              />
+              <div className={classes.avatar}>
+                <img
+                  className={classes.img}
+                  src={developer.avatar}
+                  alt="Developer avatar"
+                />
+              </div>
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
               <div className={classes.rightPane}>
                 {isEditDeveloper ? (
                   <div className={classes.description}>
-                    <IconButton
-                      onClick={handleBackIcon}
-                      className={classes.editButton}
-                    >
-                      <ArrowBackIcon />
-                    </IconButton>
+                    <div className={classes.navButton}>
+                      <IconButton onClick={handleBackIcon}>
+                        <ArrowBackIcon />
+                      </IconButton>
+                    </div>
+
                     <DeveloperForm
                       id={id}
                       onSubmit={handleSubmit}
@@ -148,53 +141,61 @@ function DeveloperInfo(props) {
                   </div>
                 ) : (
                   <div className={classes.description}>
-                    <IconButton
-                      onClick={handleEditClick}
-                      className={classes.editButton}
-                    >
-                      <EditIcon />
-                    </IconButton>
+                    <div className={classes.navButton}>
+                      <IconButton
+                        onClick={handleEditClick}
+                        className={classes.editButton}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </div>
+
                     <div className={classes.description__content}>
-                      <div className={classes.description__leftPane}>
+                      <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h6"
+                          variant="h4"
                           display="inline"
                         >
                           Name:
                         </Typography>
+                        <Typography variant="h6" display="inline">
+                          {developer.name}
+                        </Typography>
+                      </div>
+                      <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h6"
+                          variant="h4"
                           display="inline"
                         >
                           Username:
                         </Typography>
+                        <Typography variant="h6" display="inline">
+                          {developer.username}
+                        </Typography>
+                      </div>
+                      <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h6"
+                          variant="h4"
                           display="inline"
                         >
                           Phone:
                         </Typography>
+                        <Typography variant="h6" display="inline">
+                          {developer.phone}
+                        </Typography>
+                      </div>
+                      <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h6"
+                          variant="h4"
                           display="inline"
                         >
                           Email:
                         </Typography>
-                      </div>
-                      <div className={classes.description__rightPane}>
-                        <Typography variant="h6" display="inline">
-                          {developer.name}
-                        </Typography>
-                        <Typography variant="h6" display="inline">
-                          {developer.username}
-                        </Typography>
-                        <Typography variant="h6" display="inline">
-                          {developer.phone}
-                        </Typography>
+
                         <Typography variant="h6" display="inline">
                           {developer.email}
                         </Typography>
