@@ -36,6 +36,7 @@ const initialState = {
   currentDeveloper: "",
   isDeveloperAdded: false,
   isLoggedIn: false,
+  isRegisteredSuccessfully: false,
   isTokenCompared: false,
   isDeveloperEmailAlreadyExists: false,
   isUserEmailAlreadyExists: false,
@@ -139,13 +140,18 @@ function rootReducer(state = initialState, { type, payload }) {
       };
 
     case REGISTER_USER_STARTED:
-      return { ...state, loading: true, isUserEmailAlreadyExists: false };
+      return {
+        ...state,
+        loading: true,
+        isUserEmailAlreadyExists: false,
+        isRegisteredSuccessfully: false,
+      };
     case REGISTER_USER_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
-        isLoggedIn: payload,
+        isRegisteredSuccessfully: payload,
       };
     case REGISTER_USER_FAILURE:
       return {

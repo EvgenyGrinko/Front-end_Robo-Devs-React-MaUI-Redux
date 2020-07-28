@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { registerUser, loginUser } from "../../redux/actions/index";
 import * as yup from "yup";
 import { Redirect } from "react-router-dom";
+import NotificationMessage from '../NotificationMessage/NotificationMessage'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -57,6 +58,7 @@ function WelcomePage(props) {
     registerUser,
     loginUser,
     isLoggedIn,
+    isRegisteredSuccessfully
   } = props;
   useEffect(() => {
     if (isUserEmailAlreadyExists) {
@@ -83,8 +85,20 @@ function WelcomePage(props) {
         };
       });
     }
-  }, [isUserEmailAlreadyExists, isUserEmailExists, isLoginPasswordCorrect]);
+    if (isRegisteredSuccessfully) {
+      setLoginVisibility(true);
+    }
+  }, [isUserEmailAlreadyExists, isUserEmailExists, isLoginPasswordCorrect, isRegisteredSuccessfully]);
   const [isLoginVisible, setLoginVisibility] = useState(true);
+  const [notificationVisibility, setNotificationVisibility] = useState(false);
+
+  const handleNotificationClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setNotificationVisibility(false);
+  };
+
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -200,6 +214,11 @@ function WelcomePage(props) {
               errors={errors}
             />
           )}
+          <NotificationMessage
+                visibility={notificationVisibility}
+                handleClick={handleDialogClose}
+                message="Registration successful"
+              />
         </div>
       )}
     </div>
@@ -213,6 +232,7 @@ function mapStateToProps(state) {
     isUserEmailAlreadyExists: state.isUserEmailAlreadyExists,
     isUserEmailExists: state.isUserEmailExists,
     isLoginPasswordCorrect: state.isLoginPasswordCorrect,
+    isRegisteredSuccessfully: state.isRegisteredSuccessfully,
   };
 }
 

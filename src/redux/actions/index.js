@@ -203,8 +203,8 @@ export function registerUser(user) {
     try {
       dispatch(registerUserStarted());
       const url = "/api/user/register";
-      const { data } = await axios.post(url, user);
-      dispatch(registerUserSuccess(data));
+      const { data: {success} } = await axios.post(url, user);
+      dispatch(registerUserSuccess(success));
     } catch (err) {
       const { error, isUserEmailAlreadyExists } = err.response.data;
       if (error)
