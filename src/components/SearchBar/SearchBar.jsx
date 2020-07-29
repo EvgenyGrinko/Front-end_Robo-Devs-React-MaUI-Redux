@@ -18,6 +18,18 @@ const useStyles = makeStyles((theme) => ({
 const SearchBar = (props) => {
   const classes = useStyles();
   const [searchedWord, setSearchedWord] = useState("");
+  const [idTimeout, setIdTimeout] = useState();
+
+  function handleChange(event) {
+    clearTimeout(idTimeout);
+    const searchedValue = event.target.value;
+    setIdTimeout(() =>
+      setTimeout(() => {
+        props.onSearch(searchedValue);
+      }, 1000)
+    );
+    setSearchedWord(searchedValue);
+  }
 
   return (
     <div className={classes.search}>
@@ -26,10 +38,7 @@ const SearchBar = (props) => {
         fullWidth={true}
         className={classes.inputInput}
         value={searchedWord}
-        onChange={(event) => {
-          setSearchedWord(event.target.value);
-          props.onSearch(event.target.value);
-        }}
+        onChange={handleChange}
         inputProps={{ "aria-label": "search" }}
       />
     </div>

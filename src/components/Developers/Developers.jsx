@@ -43,9 +43,9 @@ const Developers = (props) => {
     getAllDevelopers();
   }, [getAllDevelopers]);
   function onSearch(searchedWord) {
-    setTimeout(() => {
+    // setTimeout(() => {
       props.findDevelopers(searchedWord);
-    }, 1000);
+    // }, 1000);
   }
 
   const classes = useStyles();
