@@ -203,7 +203,9 @@ export function registerUser(user) {
     try {
       dispatch(registerUserStarted());
       const url = "/api/user/register";
-      const { data: {success} } = await axios.post(url, user);
+      const {
+        data: { success },
+      } = await axios.post(url, user);
       dispatch(registerUserSuccess(success));
     } catch (err) {
       const { error, isUserEmailAlreadyExists } = err.response.data;
@@ -225,11 +227,11 @@ export function registerUser(user) {
 function registerUserStarted() {
   return { type: REGISTER_USER_STARTED };
 }
-function registerUserSuccess(data) {
-  localStorage.setItem("token", data.token);
+function registerUserSuccess(success) {
+  // localStorage.setItem("token", data.token);
   return {
     type: REGISTER_USER_SUCCESS,
-    payload: data.success,
+    payload: success,
   };
 }
 function registerUserFailure(error) {
@@ -242,7 +244,12 @@ export function loginUser(user) {
       dispatch(loginUserStarted());
       const url = "/api/user/login";
       const { data } = await axios.post(url, user);
-      dispatch(loginUserSuccess(data));
+      const loginUser = Object.create(
+        Object.getPrototypeOf(data.user),
+        Object.getOwnPropertyDescriptors(data.user)
+      );
+      loginUser.token = data.token;
+      dispatch(loginUserSuccess({ success: data.success, user: loginUser }));
     } catch (err) {
       const {
         error,
@@ -267,7 +274,7 @@ function loginUserStarted() {
   return { type: LOGIN_USER_STARTED };
 }
 function loginUserSuccess(data) {
-  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data.user));
   return {
     type: LOGIN_USER_SUCCESS,
     payload: data.success,

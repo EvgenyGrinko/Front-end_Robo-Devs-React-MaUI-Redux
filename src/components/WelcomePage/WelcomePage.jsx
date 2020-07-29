@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { registerUser, loginUser } from "../../redux/actions/index";
 import * as yup from "yup";
 import { Redirect } from "react-router-dom";
-import NotificationMessage from '../NotificationMessage/NotificationMessage'
+import NotificationMessage from "../NotificationMessage/NotificationMessage";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -58,7 +58,7 @@ function WelcomePage(props) {
     registerUser,
     loginUser,
     isLoggedIn,
-    isRegisteredSuccessfully
+    isRegisteredSuccessfully,
   } = props;
   useEffect(() => {
     if (isUserEmailAlreadyExists) {
@@ -87,8 +87,14 @@ function WelcomePage(props) {
     }
     if (isRegisteredSuccessfully) {
       setLoginVisibility(true);
+      setNotificationVisibility(true);
     }
-  }, [isUserEmailAlreadyExists, isUserEmailExists, isLoginPasswordCorrect, isRegisteredSuccessfully]);
+  }, [
+    isUserEmailAlreadyExists,
+    isUserEmailExists,
+    isLoginPasswordCorrect,
+    isRegisteredSuccessfully,
+  ]);
   const [isLoginVisible, setLoginVisibility] = useState(true);
   const [notificationVisibility, setNotificationVisibility] = useState(false);
 
@@ -215,10 +221,10 @@ function WelcomePage(props) {
             />
           )}
           <NotificationMessage
-                visibility={notificationVisibility}
-                handleClick={handleDialogClose}
-                message="Registration successful"
-              />
+            visibility={notificationVisibility}
+            handleClick={handleNotificationClose}
+            message="Registration successful. You can login now."
+          />
         </div>
       )}
     </div>

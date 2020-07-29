@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-import InputField from "../AddNewDeveloperForm/InputField/InputField";
+import InputField from "./InputField/InputField";
 import * as yup from "yup";
 import { connect } from "react-redux";
 
@@ -53,6 +53,7 @@ function DeveloperForm(props) {
     onEditSetSuccessDialogVisibility,
     isDeveloperEditted,
     onSubmit,
+    isDeveloperAdded,
   } = props;
 
   const [errors, setErrors] = useState({
@@ -83,7 +84,7 @@ function DeveloperForm(props) {
         };
       });
     }
-    if (type === "add" && !error) {
+    if (type === "add" && isDeveloperAdded) {
       setDeveloper({
         name: "",
         email: "",
@@ -103,6 +104,7 @@ function DeveloperForm(props) {
     isDeveloperEditted,
     onEditSetSuccessDialogVisibility,
     type,
+    isDeveloperAdded,
   ]);
   function handleSubmit(event) {
     event.preventDefault();
@@ -189,6 +191,7 @@ function mapStateToProps(state) {
     error: state.error,
     currentDeveloper: state.currentDeveloper,
     isDeveloperEditted: state.isDeveloperEditted,
+    isDeveloperAdded: state.isDeveloperAdded,
   };
 }
 export default connect(mapStateToProps)(DeveloperForm);

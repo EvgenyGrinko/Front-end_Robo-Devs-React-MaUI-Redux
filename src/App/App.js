@@ -17,7 +17,7 @@ function App(props) {
   const { isLoggedIn, isTokenCompared, compareToken } = props;
 
   useEffect(() => {
-    compareToken({ token: localStorage.getItem("token") });
+    compareToken({ token: JSON.parse(localStorage.getItem("user")).token });
   }, [compareToken]);
   return (
     <div>

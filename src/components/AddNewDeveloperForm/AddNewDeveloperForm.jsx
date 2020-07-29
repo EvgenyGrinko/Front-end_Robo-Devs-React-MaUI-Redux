@@ -9,6 +9,7 @@ import DeveloperForm from "../DeveloperForm/DeveloperForm";
 const useStyles = makeStyles((theme) => ({
   container: {
     margin: theme.spacing(4, 0, 0, 0),
+    padding: theme.spacing(2),
   },
 }));
 

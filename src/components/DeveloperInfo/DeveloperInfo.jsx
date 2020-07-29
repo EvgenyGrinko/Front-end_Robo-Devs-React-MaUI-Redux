@@ -19,22 +19,25 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     marginTop: theme.spacing(10),
-    padding: theme.spacing(2),
     [theme.breakpoints.up("xs")]: {
       width: 500,
-      height: 700,
+      height: 900,
+      padding: theme.spacing(1),
     },
     [theme.breakpoints.up("sm")]: {
-      width: 600,
-      height: 450,
+      width: 650,
+      height: 400,
+      padding: theme.spacing(1),
     },
     [theme.breakpoints.up("md")]: {
       width: 800,
       height: 450,
+      padding: theme.spacing(1),
     },
     [theme.breakpoints.up("lg")]: {
       width: 900,
       height: 500,
+      padding: theme.spacing(3),
     },
   },
   rightPane: {
@@ -50,7 +53,19 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    paddingLeft: theme.spacing(6),
+
+    [theme.breakpoints.up("xs")]: {
+      paddingLeft: theme.spacing(2),
+    },
+    [theme.breakpoints.up("sm")]: {
+      paddingLeft: theme.spacing(2),
+    },
+    [theme.breakpoints.up("md")]: {
+      paddingLeft: theme.spacing(4),
+    },
+    [theme.breakpoints.up("lg")]: {
+      paddingLeft: theme.spacing(6),
+    },
   },
   description__content: {
     display: "flex",
@@ -62,6 +77,34 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
+  },
+  textHeader: {
+    [theme.breakpoints.up("xs")]: {
+      fontSize: "1.3rem",
+    },
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "1rem",
+    },
+    [theme.breakpoints.up("md")]: {
+      fontSize: "1.5rem",
+    },
+    [theme.breakpoints.up("lg")]: {
+      fontSize: "1.7rem",
+    },
+  },
+  textContent: {
+    [theme.breakpoints.up("xs")]: {
+      fontSize: "1.1rem",
+    },
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "1rem",
+    },
+    [theme.breakpoints.up("md")]: {
+      fontSize: "1.1rem",
+    },
+    [theme.breakpoints.up("lg")]: {
+      fontSize: "1.3rem",
+    },
   },
 }));
 
@@ -84,7 +127,7 @@ function DeveloperInfo(props) {
     props.editDeveloper(developer, id);
   }
 
-  const handleDialogClose = (event, reason) => {
+  const handleNotificationClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -97,7 +140,7 @@ function DeveloperInfo(props) {
   function handleBackIcon() {
     props.getOneDeveloper(id);
     setIsEditDeveloper((prevValue) => !prevValue);
-    handleDialogClose();
+    handleNotificationClose();
   }
   const classes = useStyles();
   return (
@@ -154,49 +197,64 @@ function DeveloperInfo(props) {
                       <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h4"
+                          className={classes.textHeader}
                           display="inline"
                         >
                           Name:
                         </Typography>
-                        <Typography variant="h6" display="inline">
+
+                        <Typography
+                          className={classes.textContent}
+                          display="inline"
+                        >
                           {developer.name}
                         </Typography>
                       </div>
                       <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h4"
+                          className={classes.textHeader}
                           display="inline"
                         >
                           Username:
                         </Typography>
-                        <Typography variant="h6" display="inline">
+
+                        <Typography
+                          className={classes.textContent}
+                          display="inline"
+                        >
                           {developer.username}
                         </Typography>
                       </div>
                       <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h4"
+                          className={classes.textHeader}
                           display="inline"
                         >
                           Phone:
                         </Typography>
-                        <Typography variant="h6" display="inline">
+
+                        <Typography
+                          className={classes.textContent}
+                          display="inline"
+                        >
                           {developer.phone}
                         </Typography>
                       </div>
                       <div className={classes.description__block}>
                         <Typography
                           color="primary"
-                          variant="h4"
+                          className={classes.textHeader}
                           display="inline"
                         >
                           Email:
                         </Typography>
 
-                        <Typography variant="h6" display="inline">
+                        <Typography
+                          className={classes.textContent}
+                          display="inline"
+                        >
                           {developer.email}
                         </Typography>
                       </div>
@@ -206,7 +264,7 @@ function DeveloperInfo(props) {
               </div>
               <NotificationMessage
                 visibility={notificationVisibility}
-                handleClick={handleDialogClose}
+                handleClick={handleNotificationClose}
                 message="Developer eddited successfully"
               />
             </Grid>

@@ -23,7 +23,7 @@ function NavBar(props) {
   const classes = useStyles();
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     props.logoutUser();
   }
 
