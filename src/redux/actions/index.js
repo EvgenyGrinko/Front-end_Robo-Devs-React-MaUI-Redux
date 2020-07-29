@@ -5,6 +5,9 @@ import {
   GET_ALL_DEVELOPERS_STARTED,
   GET_ALL_DEVELOPERS_SUCCESS,
   GET_ALL_DEVELOPERS_FAILURE,
+  GET_FEW_DEVELOPERS_STARTED,
+  GET_FEW_DEVELOPERS_SUCCESS,
+  GET_FEW_DEVELOPERS_FAILURE,
   GET_ONE_DEVELOPER_STARTED,
   GET_ONE_DEVELOPER_SUCCESS,
   GET_ONE_DEVELOPER_FAILURE,
@@ -55,6 +58,22 @@ function getAllDevlopersSuccess(developers) {
 }
 function getAllDevlopersFailure(error) {
   return { type: GET_ALL_DEVELOPERS_FAILURE, payload: error };
+}
+
+export function getFewDevelopers(number, isInitialLoad) {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_FEW_DEVELOPERS_STARTED, payload: isInitialLoad});
+      const url = `/api/developers/few/?number=${number}`;
+      const { data } = await axios.get(url);
+      dispatch({
+        type: GET_FEW_DEVELOPERS_SUCCESS,
+        payload: { developers: data.developers, isInitialLoad: isInitialLoad },
+      });
+    } catch (err) {
+      dispatch({ type: GET_FEW_DEVELOPERS_FAILURE, payload: err.message });
+    }
+  };
 }
 
 // export function getOneDeveloper(id) {

@@ -10,7 +10,7 @@ import DeveloperForm from "../DeveloperForm/DeveloperForm";
 import NotificationMessage from "../NotificationMessage/NotificationMessage";
 
 const useStyles = makeStyles((theme) => ({
-  avatar: {},
+  avatar: { padding: theme.spacing(4) },
   img: {
     width: "100%",
     height: "auto",
@@ -21,21 +21,21 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(10),
     [theme.breakpoints.up("xs")]: {
       width: 500,
-      height: 900,
+      height: 920,
       padding: theme.spacing(1),
     },
     [theme.breakpoints.up("sm")]: {
-      width: 650,
-      height: 400,
-      padding: theme.spacing(1),
+      width: 620,
+      height: 500,
+      padding: theme.spacing(2),
     },
     [theme.breakpoints.up("md")]: {
-      width: 800,
-      height: 450,
-      padding: theme.spacing(1),
+      width: 950,
+      height: 500,
+      padding: theme.spacing(3),
     },
     [theme.breakpoints.up("lg")]: {
-      width: 900,
+      width: 1000,
       height: 500,
       padding: theme.spacing(3),
     },
@@ -73,17 +73,29 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-start",
   },
   description__block: {
-    paddingBottom: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
+    flexGrow: "1",
     alignItems: "flex-start",
+    [theme.breakpoints.up("xs")]: {
+      paddingBottom: theme.spacing(3.8),
+    },
+    [theme.breakpoints.up("sm")]: {
+      paddingBottom: theme.spacing(5.1),
+    },
+    [theme.breakpoints.up("md")]: {
+      paddingBottom: theme.spacing(2),
+    },
+    [theme.breakpoints.up("lg")]: {
+      paddingBottom: theme.spacing(2),
+    },
   },
   textHeader: {
     [theme.breakpoints.up("xs")]: {
       fontSize: "1.3rem",
     },
     [theme.breakpoints.up("sm")]: {
-      fontSize: "1rem",
+      fontSize: "1.1rem",
     },
     [theme.breakpoints.up("md")]: {
       fontSize: "1.5rem",
@@ -97,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1.1rem",
     },
     [theme.breakpoints.up("sm")]: {
-      fontSize: "1rem",
+      fontSize: "0.9rem",
     },
     [theme.breakpoints.up("md")]: {
       fontSize: "1.1rem",
@@ -124,6 +136,7 @@ function DeveloperInfo(props) {
   const [notificationVisibility, setNotificationVisibility] = useState(false);
 
   function handleSubmit(developer) {
+    console.log(developer);
     props.editDeveloper(developer, id);
   }
 

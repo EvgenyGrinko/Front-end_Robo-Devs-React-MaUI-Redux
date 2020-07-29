@@ -23,7 +23,7 @@ const SearchBar = (props) => {
   function handleChange(event) {
     clearTimeout(idTimeout);
     const searchedValue = event.target.value;
-    setIdTimeout(() =>
+    setIdTimeout(
       setTimeout(() => {
         props.onSearch(searchedValue);
       }, 1000)

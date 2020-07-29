@@ -2,12 +2,18 @@ import React, { useEffect, useState } from "react";
 import DevCard from "../DevCard/DevCard";
 import { Grid, Button } from "@material-ui/core";
 import { connect } from "react-redux";
-import { getAllDevelopers, findDevelopers } from "../../redux/actions/index";
+import {
+  // getAllDevelopers,
+  findDevelopers,
+  getFewDevelopers,
+} from "../../redux/actions/index";
 import SearchBar from "../SearchBar/SearchBar";
 import AddButton from "../AddButton/AddButton";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import NotificationMessage from "../NotificationMessage/NotificationMessage";
+// import PaginationBlock from "../PaginationBlock/PaginationBlock";
 
 const useStyles = makeStyles((theme) => ({
   seachAddContainer: {
@@ -34,29 +40,65 @@ const useStyles = makeStyles((theme) => ({
   buttonShowMore: {
     margin: theme.spacing(2, 0),
   },
+  noDevsFoundBlock: {
+    position: "absolute",
+    top: "50vh",
+    left: "50vw",
+    color: "grey",
+  },
 }));
 
 const Developers = (props) => {
-  const { developers, getAllDevelopers, developersLoaded } = props;
+  const {
+    // developers,
+    fewDevelopers,
+    // getAllDevelopers,
+    isDevelopersLoaded,
+    getFewDevelopers,
+    findDevelopers,
+  } = props;
   const [numberElementsToShow, setNumberElementsToShow] = useState(6);
+  const numberShowMore = 6;
+  const [isInitialDataLoaded, setIsInitialDataLoaded] = useState(false);
+  const [notificationVisibility, setNotificationVisibility] = useState(false);
+
   useEffect(() => {
-    getAllDevelopers();
-  }, [getAllDevelopers]);
+    getFewDevelopers(
+      numberElementsToShow,
+      isInitialDataLoaded
+    );
+
+    // getAllDevelopers();
+  }, [getFewDevelopers, numberElementsToShow, isInitialDataLoaded]);
   function onSearch(searchedWord) {
     // setTimeout(() => {
-      props.findDevelopers(searchedWord);
+    findDevelopers(searchedWord);
+    setIsInitialDataLoaded(true);
     // }, 1000);
   }
-
   const classes = useStyles();
 
   function handleShowMore() {
-    setNumberElementsToShow((prevValue) => prevValue + 6);
+    setNumberElementsToShow((prevValue) => prevValue + numberShowMore);
+    setIsInitialDataLoaded(true);
   }
+
+  function handleDelete() {
+    setNotificationVisibility(false);
+    setTimeout(() => {
+      setNotificationVisibility(true);
+    }, 150);
+  }
+  const handleDialogClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setNotificationVisibility(false);
+  };
 
   return (
     <div>
-      {developersLoaded ? (
+      {isDevelopersLoaded ? (
         <Grid container>
           <Grid item={true} xs={false} sm={2} />
           <Grid container item={true} spacing={2} xs={12} sm={8}>
@@ -75,20 +117,27 @@ const Developers = (props) => {
               spacing={3}
               className={classes.itemsContainer}
             >
-              {developers.length ? (
-                developers.map((item, index) => {
+              {fewDevelopers.length ? (
+                fewDevelopers.map((item, index) => {
                   if (index <= numberElementsToShow - 1)
                     return (
                       <Grid key={index} item={true} xs={12} sm={6} md={4}>
-                        <DevCard info={item} component="form" />
+                        <DevCard
+                          info={item}
+                          component="form"
+                          onDelete={handleDelete}
+                        />
                       </Grid>
                     );
                   else return null;
                 })
               ) : (
-                <div>No developers found</div>
+                <div className={classes.noDevsFoundBlock}>
+                  No developers found
+                </div>
               )}
-              {numberElementsToShow <= developers.length ? (
+
+              {numberElementsToShow <= fewDevelopers.length ? (
                 <Button
                   className={classes.buttonShowMore}
                   variant="outlined"
@@ -96,12 +145,18 @@ const Developers = (props) => {
                   fullWidth={true}
                   onClick={handleShowMore}
                 >
-                  show 6 more
+                  show more
                 </Button>
               ) : null}
+              {/* <PaginationBlock /> */}
             </Grid>
           </Grid>
           <Grid item={true} xs={false} sm={2} />
+          <NotificationMessage
+            visibility={notificationVisibility}
+            handleClick={handleDialogClose}
+            message="Developer deleted"
+          />
         </Grid>
       ) : (
         <LoadingSpinner />
@@ -111,13 +166,15 @@ const Developers = (props) => {
 };
 
 const mapDispatchToProps = {
-  getAllDevelopers,
+  // getAllDevelopers,
   findDevelopers,
+  getFewDevelopers,
 };
 function mapStateToProps(state) {
   return {
     developers: state.developers,
-    developersLoaded: state.developersLoaded,
+    isDevelopersLoaded: state.isDevelopersLoaded,
+    fewDevelopers: state.fewDevelopers,
   };
 }
 

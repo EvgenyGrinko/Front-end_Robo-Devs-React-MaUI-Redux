@@ -62,6 +62,15 @@ function DeveloperForm(props) {
     username: "",
     phone: "",
   });
+  const [originalDeveloper, setOriginalDeveloper] = useState(() => {
+    if (type === "edit")
+      return {
+        name: initialDeveloper.name,
+        email: initialDeveloper.email,
+        username: initialDeveloper.username,
+        phone: initialDeveloper.phone,
+      };
+  });
   const [developer, setDeveloper] = useState(() => {
     if (type === "edit") {
       return {
@@ -110,7 +119,15 @@ function DeveloperForm(props) {
     event.preventDefault();
     try {
       validationSchema.validateSync({ ...developer }, { abortEarly: false });
-      onSubmit(developer);
+      if (
+        type === "edit" &&
+        JSON.stringify(developer) === JSON.stringify(originalDeveloper)
+      ) {
+        return;
+      } else {
+        setOriginalDeveloper(developer);
+        onSubmit(developer);
+      }
       setErrors({
         name: "",
         email: "",

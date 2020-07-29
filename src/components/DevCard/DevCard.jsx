@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import DialogDelete from "../dialogs/DialogDelete/DialogDelete";
-import NotificationMessage from "../NotificationMessage/NotificationMessage";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { Link } from "react-router-dom";
 import { deleteOneDeveloper } from "../../redux/actions/index";
@@ -30,8 +29,7 @@ function DevCard(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpened, setDeleteDialogVisibility] = useState(false);
   const [menuOpened, setMenuVisibility] = useState(false);
-  const { info } = props;
-  const [notificationVisibility, setNotificationVisibility] = useState(false);
+  const { info, onDelete } = props;
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,14 +52,7 @@ function DevCard(props) {
   const handleDeleteDeveloper = () => {
     props.deleteOneDeveloper(info._id);
     setDeleteDialogVisibility(false);
-    setNotificationVisibility(true);
-  };
-
-  const handleDialogClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setNotificationVisibility(false);
+    onDelete();
   };
 
   return (
@@ -119,11 +110,6 @@ function DevCard(props) {
             open={deleteDialogOpened}
             onClose={handleDeleteDialogClose}
             onDelete={handleDeleteDeveloper}
-          />
-          <NotificationMessage
-            visibility={notificationVisibility}
-            handleClick={handleDialogClose}
-            message="Developer deleted"
           />
         </div>
       </CardActions>

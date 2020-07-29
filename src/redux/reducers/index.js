@@ -5,6 +5,9 @@ import {
   GET_ALL_DEVELOPERS_STARTED,
   GET_ALL_DEVELOPERS_SUCCESS,
   GET_ALL_DEVELOPERS_FAILURE,
+  GET_FEW_DEVELOPERS_STARTED,
+  GET_FEW_DEVELOPERS_SUCCESS,
+  GET_FEW_DEVELOPERS_FAILURE,
   GET_ONE_DEVELOPER_STARTED,
   GET_ONE_DEVELOPER_SUCCESS,
   GET_ONE_DEVELOPER_FAILURE,
@@ -33,6 +36,7 @@ const initialState = {
   loading: false,
   error: null,
   developers: [],
+  fewDevelopers: [],
   currentDeveloper: "",
   isDeveloperAdded: false,
   isLoggedIn: false,
@@ -43,7 +47,8 @@ const initialState = {
   isUserEmailExists: true,
   isLoginPasswordCorrect: true,
   isDeveloperEditted: false,
-  developersLoaded: false,
+  isDevelopersLoaded: false,
+  isInitialLoad: true,
 };
 
 function rootReducer(state = initialState, { type, payload }) {
@@ -76,15 +81,15 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         loading: true,
         currentDeveloper: "",
-        developersLoaded: false,
+        isDeveloperAdded: false,
+        isDevelopersLoaded: false,
       };
     case GET_ALL_DEVELOPERS_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
-        isDeveloperAdded: false,
-        developersLoaded: true,
+        isDevelopersLoaded: true,
         developers: payload,
       };
     case GET_ALL_DEVELOPERS_FAILURE:
@@ -92,8 +97,35 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         loading: false,
         error: payload.error,
-        developersLoaded: false,
+        isDevelopersLoaded: false,
       };
+
+    case GET_FEW_DEVELOPERS_STARTED:
+      return {
+        ...state,
+        loading: true,
+        currentDeveloper: "",
+        isDeveloperAdded: false,
+        isDevelopersLoaded: payload,
+      };
+
+    case GET_FEW_DEVELOPERS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        isDevelopersLoaded: true,
+        fewDevelopers: payload.developers,
+      };
+
+    case GET_FEW_DEVELOPERS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        isDevelopersLoaded: false,
+        error: payload,
+      };
+
     case GET_ONE_DEVELOPER_STARTED:
       return { ...state, loading: true, isDeveloperEditted: false };
     case GET_ONE_DEVELOPER_SUCCESS:
@@ -113,6 +145,7 @@ function rootReducer(state = initialState, { type, payload }) {
         loading: false,
         error: null,
         developers: payload,
+        fewDevelopers: payload
       };
     case DELETE_ONE_DEVELOPER_FAILURE:
       return { ...state, loading: false, error: payload };
@@ -212,7 +245,8 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         loading: false,
         error: null,
-        developers: payload,
+        // developers: payload,
+        fewDevelopers: payload,
       };
     case SEARCH_FOR_DEVELOPERS_FAILURE:
       return {
