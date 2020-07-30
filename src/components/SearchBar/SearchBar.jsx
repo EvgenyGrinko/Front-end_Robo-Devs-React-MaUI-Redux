@@ -26,7 +26,7 @@ const SearchBar = (props) => {
     setIdTimeout(
       setTimeout(() => {
         props.onSearch(searchedValue);
-      }, 1000)
+      }, 500)
     );
     setSearchedWord(searchedValue);
   }

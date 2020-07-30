@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 250,
   },
+  infoLink: {
+    textTransform: "none",
+  },
 }));
 
 function DevCard(props) {
@@ -105,6 +108,12 @@ function DevCard(props) {
             <MenuItem onClick={handleDeleteClick} open={menuOpened}>
               Delete
             </MenuItem>
+            <Link
+              className={classes.infoLink}
+              to={`/api/developers/${info._id}`}
+            >
+              <MenuItem open={menuOpened}>Info</MenuItem>
+            </Link>
           </Menu>
           <DialogDelete
             open={deleteDialogOpened}

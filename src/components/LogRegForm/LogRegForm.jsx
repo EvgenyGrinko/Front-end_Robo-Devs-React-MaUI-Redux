@@ -13,7 +13,7 @@ import {
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(1),
-    margin: theme.spacing(20, 20, 0, 0),
+    margin: theme.spacing(20, 30, 0, 0),
   },
   inputBlock: {
     padding: theme.spacing(0, 2, 2, 1),
